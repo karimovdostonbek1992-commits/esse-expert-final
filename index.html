@@ -3,114 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EsseLab Pro - Rasmiy Tahlil</title>
+    <title>EsseLab Pro - Final</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
+        body { background: #020617; color: #f8fafc; font-family: sans-serif; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
     </style>
 </head>
-<body class="min-h-screen p-6 md:p-12">
-    <div class="max-w-5xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2 space-y-6">
-            <div class="glass p-8 rounded-[2rem] shadow-2xl">
-                <h1 class="text-3xl font-black text-indigo-500 mb-6 uppercase tracking-tighter">ESSE.LAB PRO</h1>
-                <div class="mb-4">
-                    <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Esse Mavzusi</label>
-                    <input id="topicInput" type="text" placeholder="Mavzuni kiriting..." class="w-full p-4 mt-1 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:border-indigo-500">
-                </div>
-                <div class="mb-4">
-                    <label class="text-[10px] uppercase font-bold text-slate-500 ml-1">Matn</label>
-                    <textarea id="essayInput" placeholder="Matnni shu yerga joylang..." class="w-full h-80 p-4 mt-1 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-lg leading-relaxed"></textarea>
-                </div>
-                <button id="checkBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-2xl font-bold text-xl transition-all active:scale-95 shadow-xl shadow-indigo-600/20">TAHLILNI BOSHLASH</button>
-            </div>
-            <div id="resultBox" class="hidden glass p-8 rounded-[2rem] border-l-8 border-indigo-600 animate-fade-in">
-                <h2 class="text-xl font-bold mb-4 text-white">EKSPERT XULOSASI:</h2>
-                <div id="resultContent" class="text-slate-300 space-y-4 text-lg"></div>
+<body class="p-6 md:p-12 min-h-screen">
+    <div class="max-w-4xl mx-auto space-y-6">
+        <div class="glass p-8 rounded-[2rem] shadow-2xl">
+            <h1 class="text-3xl font-black text-indigo-500 mb-6 uppercase">ESSE.LAB PRO</h1>
+            
+            <input id="topicInput" type="text" placeholder="Esse mavzusini kiriting..." class="w-full p-4 mb-4 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-white">
+            
+            <textarea id="essayInput" placeholder="Matnni shu yerga joylashtiring..." class="w-full h-80 p-4 bg-slate-900 border border-slate-700 rounded-xl outline-none focus:border-indigo-500 text-lg"></textarea>
+            
+            <button id="checkBtn" class="w-full bg-indigo-600 hover:bg-indigo-500 py-4 rounded-xl mt-4 font-bold text-xl transition-all">TAHLILNI BOSHLASH</button>
+            
+            <div id="loader" class="hidden mt-6 text-center animate-pulse">
+                <p class="text-indigo-400">Sun'iy intellekt tahlil qilmoqda, iltimos kuting...</p>
             </div>
         </div>
-        <div class="lg:col-span-1">
-            <div class="glass p-6 rounded-[2rem] sticky top-6">
-                <h3 class="font-bold text-indigo-400 mb-4 border-b border-white/10 pb-2 uppercase text-xs">Baholash Mezonlari (15 ball)</h3>
-                <ul class="text-[11px] space-y-4 text-slate-400">
-                    <li class="border-b border-white/5 pb-2"><b class="text-white block">1. Mavzu (4 ball):</b> Mavzu ochilishi va tahlil.</li>
-                    <li class="border-b border-white/5 pb-2"><b class="text-white block">2. Mantiq (3 ball):</b> Fikrlar izchilligi.</li>
-                    <li class="border-b border-white/5 pb-2"><b class="text-white block">3. Imlo (3 ball):</b> To'g'ri yozish.</li>
-                    <li class="border-b border-white/5 pb-2"><b class="text-white block">4. Punktuatsiya (2 ball):</b> Tinish belgilari.</li>
-                    <li class="border-b border-white/5 pb-2"><b class="text-white block">5. Uslub (3 ball):</b> Akademik so'zlar.</li>
-                </ul>
-                <div id="loader" class="hidden mt-6 text-center">
-                    <div class="w-8 h-8 border-4 border-indigo-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                    <p class="text-[10px] text-indigo-400 font-bold">EKSPERT O'YLAMOQDA...</p>
-                </div>
-            </div>
+
+        <div id="resultBox" class="hidden glass p-8 rounded-[2rem] border-l-4 border-indigo-500">
+            <h2 class="text-xl font-bold mb-4 text-white uppercase italic">Ekspert Xulosasi:</h2>
+            <div id="resultContent" class="text-slate-300 space-y-4 text-lg leading-relaxed"></div>
         </div>
     </div>
+
     <script type="module">
-    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
 
-    // API Kalitingizni tekshirib ko'ring (to'g'riligiga ishonch hosil qiling)
-    const API_KEY = "AIzaSyCSjAlYipWXYTUEJnczhpqreOiP3ofG1h0"; 
-    const genAI = new GoogleGenerativeAI(API_KEY);
+        // Kalitingiz rasmdagidek to'g'ri
+        const API_KEY = "AIzaSyCSjAlYipWXYTUEJnczhpqreOiP3ofG1h0"; 
+        const genAI = new GoogleGenerativeAI(API_KEY);
 
-    const checkBtn = document.getElementById('checkBtn');
-    const topicInput = document.getElementById('topicInput');
-    const essayInput = document.getElementById('essayInput');
-    const resultBox = document.getElementById('resultBox');
-    const resultContent = document.getElementById('resultContent');
-    const loader = document.getElementById('loader');
+        document.getElementById('checkBtn').onclick = async () => {
+            const topic = document.getElementById('topicInput').value.trim();
+            const text = document.getElementById('essayInput').value.trim();
+            const resultBox = document.getElementById('resultBox');
+            const resultContent = document.getElementById('resultContent');
+            const loader = document.getElementById('loader');
 
-    checkBtn.onclick = async () => {
-        const topic = topicInput.value.trim();
-        const text = essayInput.value.trim();
+            if(!topic || text.length < 50) return alert("Mavzu va matnni to'liq kiriting!");
 
-        if(!topic || text.length < 50) {
-            alert("Iltimos, mavzu va kamida 50 ta so'zdan iborat matnni kiriting!");
-            return;
-        }
+            loader.classList.remove('hidden');
+            resultBox.classList.add('hidden');
 
-        loader.classList.remove('hidden');
-        resultBox.classList.add('hidden');
-        checkBtn.disabled = true;
-
-        try {
-            // DIQQAT: Model nomini 'gemini-1.5-flash-latest' ga o'zgartirdik
-            const model = genAI.getGenerativeModel({ 
-                model: "gemini-1.5-flash-latest" 
-            });
-
-            const prompt = `
-                Sen O'zbek tili va adabiyoti bo'yicha Milliy sertifikat imtihoni ekspertsan. 
-                Mavzu: ${topic}
-                Esse: ${text}
+            try {
+                // DIQQAT: Bu yerda 'gemini-1.5-flash' eng barqaror model nomi
+                const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
                 
-                Vazifang:
-                1. 15 ballik tizimda (Mavzu 4, Mantiq 3, Imlo 3, Punktuatsiya 2, Uslub 3) baholash.
-                2. "KAMCHILIKLAR" bo'limida matndagi xatolarni bittalab ko'rsatib tushuntir.
-                3. "TAVSIYALAR" bo'limida ballni oshirish uchun maslahat ber.
-            `;
+                const prompt = `
+                    Sen O'zbekistondagi Ona tili va adabiyotidan milliy sertifikat imtihoni ekspertsan. 
+                    Mavzu: ${topic}
+                    Matn: ${text}
+                    Ushbu esseni 15 ballik mezon asosida tahlil qil. Xatolarni (imlo, mantiq, punktuatsiya) bittalab ko'rsat va tavsiyalar ber.
+                `;
 
-            const result = await model.generateContent(prompt);
-            const response = await result.response;
-            const outputText = response.text();
-            
-            resultContent.innerHTML = outputText
-                .replace(/\n/g, '<br>')
-                .replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
-            
-            resultBox.classList.remove('hidden');
-        } catch (err) {
-            console.error(err);
-            // Agar yana 404 chiqsa, bu model nomini 'gemini-pro' qilib ko'ring
-            alert("Xatolik yuz berdi: " + err.message);
-        } finally {
-            loader.classList.add('hidden');
-            checkBtn.disabled = false;
-        }
-    };
-</script>
+                const result = await model.generateContent(prompt);
+                const response = await result.response;
+                
+                resultContent.innerHTML = response.text()
+                    .replace(/\n/g, '<br>')
+                    .replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
+                
+                resultBox.classList.remove('hidden');
+                resultBox.scrollIntoView({ behavior: 'smooth' });
+            } catch (err) {
+                console.error(err);
+                // Agar 404 xatosi yana chiqsa, bu mintaqaviy cheklov bo'lishi mumkin
+                alert("Ulanish xatosi: " + err.message + "\n\nMaslahat: VPN yoqib ko'ring.");
+            } finally {
+                loader.classList.add('hidden');
+            }
+        };
+    </script>
 </body>
 </html>
