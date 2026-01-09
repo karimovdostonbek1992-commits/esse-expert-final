@@ -3,87 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EsseLab Pro - Groq AI Tahlili</title>
+    <title>EsseLab Pro v4.0 - Professional System</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; scroll-behavior: smooth; }
         .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); }
         .input-box { background: #0f172a; border: 1px solid #1e293b; color: #e2e8f0; transition: all 0.3s; }
-        .input-box:focus { border-color: #10b981; box-shadow: 0 0 15px rgba(16, 185, 129, 0.2); outline: none; }
+        .input-box:focus { border-color: #10b981; outline: none; }
+        @media print { .no-print { display: none; } }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-10">
+<body class="min-h-screen p-4 md:p-8">
     <div class="max-w-6xl mx-auto">
-        <header class="flex flex-col md:flex-row justify-between items-center mb-10 gap-4">
+        <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 no-print">
             <div>
-                <h1 class="text-4xl font-extrabold tracking-tighter text-emerald-500">ESSE.LAB <span class="text-white">PRO</span></h1>
-                <p class="text-slate-400 text-xs uppercase tracking-[0.3em]">Llama 3.3 Engine • Milliy Sertifikat Standarti</p>
+                <h1 class="text-4xl font-extrabold text-emerald-500">ESSE.LAB <span class="text-white text-2xl">v4.0</span></h1>
+                <p class="text-slate-400 text-[10px] uppercase tracking-widest">Advanced Assessment Framework</p>
             </div>
-            <div class="glass px-6 py-3 rounded-2xl border border-emerald-500/20">
-                <p class="text-[10px] text-slate-500 uppercase font-bold text-center">Maksimal Ball</p>
-                <p class="text-2xl font-black text-emerald-400">15 BALL</p>
+            <div class="flex gap-4">
+                <button onclick="clearHistory()" class="text-[10px] text-red-400 hover:text-red-300 uppercase font-bold px-4 py-2 border border-red-500/20 rounded-lg transition">Tarixni tozalash</button>
             </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-8 space-y-6">
-                <div class="glass p-8 rounded-[2.5rem] shadow-2xl border-t border-white/5">
-                    <div class="mb-6">
-                        <label class="block text-emerald-400 text-[10px] font-black uppercase mb-3 ml-1 tracking-widest">Esse Mavzusi</label>
-                        <input id="topicInput" type="text" class="input-box w-full p-4 rounded-xl text-md" placeholder="Esse mavzusini kiriting...">
+                <div class="glass p-6 md:p-8 rounded-[2rem] shadow-2xl no-print">
+                    <div class="flex justify-between items-end mb-4">
+                        <label class="text-emerald-400 text-[10px] font-black uppercase tracking-widest ml-1">Esse Mavzusi</label>
                     </div>
+                    <input id="topicInput" type="text" class="input-box w-full p-4 rounded-xl mb-6" placeholder="Mavzuni kiriting...">
 
-                    <div class="mb-6">
-                        <label class="block text-emerald-400 text-[10px] font-black uppercase mb-3 ml-1 tracking-widest">Esse Matni</label>
-                        <textarea id="essayInput" class="input-box w-full h-96 p-6 rounded-2xl text-lg resize-none leading-relaxed" placeholder="Esse matnini bu yerga yozing..."></textarea>
+                    <div class="flex justify-between items-end mb-2">
+                        <label class="text-emerald-400 text-[10px] font-black uppercase tracking-widest ml-1">Esse Matni</label>
+                        <span id="wordCount" class="text-[10px] bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20">0 so'z</span>
                     </div>
+                    <textarea id="essayInput" class="input-box w-full h-80 p-6 rounded-2xl text-lg resize-none mb-6" placeholder="Yozishni boshlang..."></textarea>
                     
-                    <button id="checkBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-4 active:scale-95 text-xl shadow-xl shadow-emerald-600/20">
-                        <i class="fas fa-bolt"></i>
-                        <span>TEZKOR TAHLILNI BOSHLASH</span>
+                    <button id="checkBtn" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-5 rounded-2xl transition-all flex items-center justify-center gap-4 active:scale-95 text-xl">
+                        <i class="fas fa-brain"></i>
+                        <span>TAHLIL QILISH</span>
                     </button>
                 </div>
 
-                <div id="resultBox" class="hidden glass p-8 rounded-[2.5rem] border-l-4 border-emerald-500 animate-fadeIn">
-                    <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
-                        <i class="fas fa-microchip text-emerald-500"></i> Ekspert Tahlili
-                    </h2>
-                    <div id="resultContent" class="text-slate-300 space-y-4 text-lg leading-relaxed">
+                <div id="resultBox" class="hidden glass p-10 rounded-[2.5rem] border-l-4 border-emerald-500 relative">
+                    <div class="flex justify-between items-start mb-8 no-print">
+                        <h2 class="text-2xl font-bold flex items-center gap-3 italic">
+                            <i class="fas fa-certificate text-emerald-500"></i> Rasmiy Xulosa
+                        </h2>
+                        <button onclick="downloadPDF()" class="bg-white/10 hover:bg-white/20 px-4 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                            <i class="fas fa-file-pdf text-red-400"></i> PDF YUKLASH
+                        </button>
+                    </div>
+                    <div id="resultContent" class="text-slate-300 space-y-4 text-lg leading-relaxed print:text-black">
                         </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-4 space-y-6">
+            <div class="lg:col-span-4 space-y-6 no-print">
                 <div class="glass p-6 rounded-[2rem]">
-                    <h3 class="text-xs font-black text-slate-400 uppercase mb-6 tracking-widest border-b border-white/5 pb-4">Baholash Mezonlari</h3>
-                    <div class="space-y-4">
-                        <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                            <p class="font-bold text-emerald-400 text-sm">1. Mavzu (4 ball)</p>
-                            <p class="text-[10px] text-slate-500">Mavzuning to'liq ochilishi va asoslar.</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                            <p class="font-bold text-emerald-400 text-sm">2. Mantiqiylik (3 ball)</p>
-                            <p class="text-[10px] text-slate-500">Fikrlar izchilligi va bog'liqlik.</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                            <p class="font-bold text-emerald-400 text-sm">3. Imlo (3 ball)</p>
-                            <p class="text-[10px] text-slate-500">So'zlarning to'g'ri yozilishi.</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                            <p class="font-bold text-emerald-400 text-sm">4. Punktuatsiya (2 ball)</p>
-                            <p class="text-[10px] text-slate-500">Tinish belgilarining to'g'ri qo'yilishi.</p>
-                        </div>
-                        <div class="p-3 rounded-xl bg-white/5 border border-white/5">
-                            <p class="font-bold text-emerald-400 text-sm">5. Uslub (3 ball)</p>
-                            <p class="text-[10px] text-slate-500">Akademik til va gap qurilishi.</p>
-                        </div>
+                    <h3 class="text-xs font-black text-slate-400 uppercase mb-4 tracking-widest">Oxirgi tahlillar</h3>
+                    <div id="historyList" class="space-y-3 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+                        <p class="text-[10px] text-slate-600 italic">Hali tarix mavjud emas</p>
                     </div>
+                </div>
 
-                    <div id="loader" class="hidden mt-8 text-center p-6 bg-emerald-500/5 rounded-2xl border border-emerald-500/10">
-                        <div class="w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p class="text-emerald-400 font-bold text-[10px] animate-pulse uppercase">Groq AI tahlil qilmoqda...</p>
+                <div class="glass p-6 rounded-[2rem] sticky top-6">
+                    <h3 class="text-xs font-black text-emerald-500 uppercase mb-4 tracking-widest">Baholash Tizimi</h3>
+                    <div class="space-y-2 text-[11px] text-slate-400">
+                        <div class="flex justify-between border-b border-white/5 pb-2"><span>Mavzu</span><span class="text-white">4 ball</span></div>
+                        <div class="flex justify-between border-b border-white/5 pb-2"><span>Mantiq</span><span class="text-white">3 ball</span></div>
+                        <div class="flex justify-between border-b border-white/5 pb-2"><span>Imlo</span><span class="text-white">3 ball</span></div>
+                        <div class="flex justify-between border-b border-white/5 pb-2"><span>Punktuatsiya</span><span class="text-white">2 ball</span></div>
+                        <div class="flex justify-between border-b border-white/5 pb-2"><span>Uslub</span><span class="text-white">3 ball</span></div>
+                    </div>
+                    <div id="loader" class="hidden mt-6 text-center">
+                        <div class="w-8 h-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                        <p class="text-[10px] text-emerald-400 animate-pulse">ANALIZ KETMOQDA...</p>
                     </div>
                 </div>
             </div>
@@ -92,67 +90,87 @@
 
     <script>
         const GROQ_API_KEY = "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"; 
+        
+        // So'zlar hisoblagichi
+        document.getElementById('essayInput').addEventListener('input', function() {
+            const words = this.value.trim().split(/\s+/).filter(w => w.length > 0);
+            document.getElementById('wordCount').innerText = words.length + " so'z";
+        });
 
-        const checkBtn = document.getElementById('checkBtn');
-        const topicInput = document.getElementById('topicInput');
-        const essayInput = document.getElementById('essayInput');
-        const resultBox = document.getElementById('resultBox');
-        const resultContent = document.getElementById('resultContent');
-        const loader = document.getElementById('loader');
+        // PDF Yuklash
+        function downloadPDF() {
+            const element = document.getElementById('resultBox');
+            const opt = {
+                margin: 1,
+                filename: 'esse-tahlili.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, backgroundColor: '#020617' },
+                jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
 
-        checkBtn.addEventListener('click', async () => {
-            const topic = topicInput.value.trim();
-            const text = essayInput.value.trim();
+        // Tarixni boshqarish
+        function saveToHistory(topic, score) {
+            let history = JSON.parse(localStorage.getItem('esseHistory') || '[]');
+            history.unshift({ topic, date: new Date().toLocaleDateString(), score });
+            localStorage.setItem('esseHistory', JSON.stringify(history.slice(0, 5)));
+            renderHistory();
+        }
 
-            if (!topic || text.length < 50) {
-                alert("Iltimos, mavzu va kamida 50 ta so'zdan iborat matnni kiriting!");
-                return;
-            }
+        function renderHistory() {
+            const list = document.getElementById('historyList');
+            const history = JSON.parse(localStorage.getItem('esseHistory') || '[]');
+            list.innerHTML = history.length ? history.map(item => `
+                <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+                    <p class="text-[10px] font-bold truncate">${item.topic}</p>
+                    <p class="text-[8px] text-slate-500">${item.date} • <span class="text-emerald-400">${item.score}</span></p>
+                </div>
+            `).join('') : '<p class="text-[10px] text-slate-600 italic">Hali tarix mavjud emas</p>';
+        }
 
-            resultBox.classList.add('hidden');
-            loader.classList.remove('hidden');
-            checkBtn.disabled = true;
+        function clearHistory() {
+            localStorage.removeItem('esseHistory');
+            renderHistory();
+        }
+
+        // Asosiy Tahlil
+        document.getElementById('checkBtn').onclick = async () => {
+            const topic = document.getElementById('topicInput').value.trim();
+            const text = document.getElementById('essayInput').value.trim();
+            if (!topic || text.length < 50) return alert("Mavzu va matn to'liq bo'lishi kerak!");
+
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('resultBox').classList.add('hidden');
 
             try {
                 const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
                     method: 'POST',
-                    headers: {
-                        'Authorization': `Bearer ${GROQ_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Authorization': `Bearer ${GROQ_API_KEY}`, 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [
-                            {
-                                role: "system",
-                                content: "Sen O'zbekistondagi Ona tili imtihoni (Milliy sertifikat) ekspertsan. Esseni 15 ballik mezon asosida tahlil qil. Natijani quyidagi tartibda chiqar: 1. Ballar jadvali. 2. KAMCHILIKLAR (Matndagi xatolarni bittalab tushuntir). 3. TAVSIYALAR. Professional bo'l."
-                            },
-                            {
-                                role: "user",
-                                content: `Mavzu: ${topic}\n\nEsse matni: ${text}`
-                            }
-                        ]
+                        messages: [{ role: "system", content: "Sen O'zbek tili ekspertsan. 15 ballik tizimda tahlil qil. Javobni 'JAMI BALL: X/15' bilan boshla." },
+                                   { role: "user", content: `Mavzu: ${topic}\n\nMatn: ${text}` }]
                     })
                 });
 
                 const data = await response.json();
                 const output = data.choices[0].message.content;
                 
-                resultContent.innerHTML = output
-                    .replace(/\n/g, '<br>')
-                    .replace(/\*\*(.*?)\*\*/g, '<b class="text-emerald-400 font-bold">$1</b>');
+                document.getElementById('resultContent').innerHTML = output.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b class="text-emerald-400 font-bold">$1</b>');
+                document.getElementById('resultBox').classList.remove('hidden');
                 
-                loader.classList.add('hidden');
-                resultBox.classList.remove('hidden');
-                resultBox.scrollIntoView({ behavior: 'smooth' });
-            } catch (error) {
-                alert("Xatolik yuz berdi. Iltimos, internetni tekshiring.");
-                console.error(error);
-                loader.classList.add('hidden');
+                // Ballni tarixdan ajratib olish
+                const scoreMatch = output.match(/(\d+)\/15/);
+                saveToHistory(topic, scoreMatch ? scoreMatch[0] : "Tahlil");
+            } catch (err) {
+                alert("Xato yuz berdi.");
             } finally {
-                checkBtn.disabled = false;
+                document.getElementById('loader').classList.add('hidden');
             }
-        });
+        };
+
+        window.onload = renderHistory;
     </script>
 </body>
 </html>
