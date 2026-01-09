@@ -50,34 +50,67 @@
         </div>
     </div>
     <script type="module">
-        import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
-        const API_KEY = "AIzaSyCSjAlYipWXYTUEJnczhpqreOiP3ofG1h0"; 
-        const genAI = new GoogleGenerativeAI(API_KEY);
-        const checkBtn = document.getElementById('checkBtn');
-        checkBtn.onclick = async () => {
-            const topic = document.getElementById('topicInput').value.trim();
-            const text = document.getElementById('essayInput').value.trim();
-            if(!topic || text.length < 50) return alert("Iltimos, mavzu va matnni to'liq kiriting!");
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('resultBox').classList.add('hidden');
-            checkBtn.disabled = true;
-            try {
-                const model = genAI.getGenerativeModel({ 
-                    model: "gemini-1.5-flash",
-                    systemInstruction: "Sen O'zbek tili ekspertsan. Esseni 15 ballik tizimda tahlil qil. Xatolarni bittalab 'KAMCHILIKLAR' bo'limida tushuntir va 'TAVSIYALAR' ber."
-                });
-                const result = await model.generateContent(`Mavzu: ${topic}\n\nEsse: ${text}`);
-                const response = await result.response;
-                document.getElementById('resultContent').innerHTML = response.text().replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
-                document.getElementById('resultBox').classList.remove('hidden');
-            } catch (err) {
-                alert("Xatolik: API ulanmadi. Iltimos, VPN yoqib ko'ring.");
-                console.error(err);
-            } finally {
-                document.getElementById('loader').classList.add('hidden');
-                checkBtn.disabled = false;
-            }
-        };
-    </script>
+    import { GoogleGenerativeAI } from "https://esm.run/@google/generative-ai";
+
+    // API Kalitingizni tekshirib ko'ring (to'g'riligiga ishonch hosil qiling)
+    const API_KEY = "AIzaSyCSjAlYipWXYTUEJnczhpqreOiP3ofG1h0"; 
+    const genAI = new GoogleGenerativeAI(API_KEY);
+
+    const checkBtn = document.getElementById('checkBtn');
+    const topicInput = document.getElementById('topicInput');
+    const essayInput = document.getElementById('essayInput');
+    const resultBox = document.getElementById('resultBox');
+    const resultContent = document.getElementById('resultContent');
+    const loader = document.getElementById('loader');
+
+    checkBtn.onclick = async () => {
+        const topic = topicInput.value.trim();
+        const text = essayInput.value.trim();
+
+        if(!topic || text.length < 50) {
+            alert("Iltimos, mavzu va kamida 50 ta so'zdan iborat matnni kiriting!");
+            return;
+        }
+
+        loader.classList.remove('hidden');
+        resultBox.classList.add('hidden');
+        checkBtn.disabled = true;
+
+        try {
+            // DIQQAT: Model nomini 'gemini-1.5-flash-latest' ga o'zgartirdik
+            const model = genAI.getGenerativeModel({ 
+                model: "gemini-1.5-flash-latest" 
+            });
+
+            const prompt = `
+                Sen O'zbek tili va adabiyoti bo'yicha Milliy sertifikat imtihoni ekspertsan. 
+                Mavzu: ${topic}
+                Esse: ${text}
+                
+                Vazifang:
+                1. 15 ballik tizimda (Mavzu 4, Mantiq 3, Imlo 3, Punktuatsiya 2, Uslub 3) baholash.
+                2. "KAMCHILIKLAR" bo'limida matndagi xatolarni bittalab ko'rsatib tushuntir.
+                3. "TAVSIYALAR" bo'limida ballni oshirish uchun maslahat ber.
+            `;
+
+            const result = await model.generateContent(prompt);
+            const response = await result.response;
+            const outputText = response.text();
+            
+            resultContent.innerHTML = outputText
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<b class="text-white">$1</b>');
+            
+            resultBox.classList.remove('hidden');
+        } catch (err) {
+            console.error(err);
+            // Agar yana 404 chiqsa, bu model nomini 'gemini-pro' qilib ko'ring
+            alert("Xatolik yuz berdi: " + err.message);
+        } finally {
+            loader.classList.add('hidden');
+            checkBtn.disabled = false;
+        }
+    };
+</script>
 </body>
 </html>
