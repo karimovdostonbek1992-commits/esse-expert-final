@@ -3,189 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>EssayLab AI - Professional Platform</title>
+    <title>EssayLab AI - Milliy Sertifikat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        
-        :root { --t-color: #10b981; --t-shadow: rgba(16, 185, 129, 0.5); --body-bg: #020617; --card-bg: rgba(15, 23, 42, 0.7); --text: #ffffff; }
-        .light-mode { --t-color: #3b82f6; --t-shadow: rgba(59, 130, 246, 0.3); --body-bg: #f8fafc; --card-bg: rgba(255, 255, 255, 0.8); --text: #1e293b; }
-
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--body-bg); color: var(--text); transition: 0.5s ease; }
-        .glass { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid rgba(128, 128, 128, 0.1); }
-        
-        /* Neon Tugmalar */
-        .neon-btn { background: var(--t-color); box-shadow: 0 0 15px var(--t-shadow); transition: 0.3s; }
-        .neon-btn:hover { box-shadow: 0 0 25px var(--t-color); transform: translateY(-2px); }
-
-        /* Shaffof Til Tanlagich */
-        .glass-nav { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; }
-        
-        .mode-uz { --t-color: #10b981; --t-shadow: rgba(16, 185, 129, 0.4); }
-        .mode-en { --t-color: #3b82f6; --t-shadow: rgba(59, 130, 246, 0.4); }
-        .mode-ru { --t-color: #f43f5e; --t-shadow: rgba(244, 63, 94, 0.4); }
-
-        .modal-bg { background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="min-h-screen p-4 md:p-8 mode-uz" id="mainBody">
+<body class="mode-uz" id="mainBody">
 
-    <div class="fixed top-6 right-6 flex items-center gap-4 z-[100] no-print">
-        <button onclick="toggleTheme()" class="glass-nav p-3 text-lg hover:scale-110 transition">
+    <div class="nav-container no-print">
+        <button onclick="toggleTheme()" id="themeToggleBtn" class="glass-nav-btn">
             <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
         </button>
-        <div class="glass-nav p-1 flex gap-1">
-            <button onclick="setMode('uz')" id="btnUz" class="px-4 py-2 rounded-xl font-bold text-xs transition-all neon-btn text-white">UZ</button>
-            <button onclick="setMode('en')" id="btnEn" class="px-4 py-2 rounded-xl font-bold text-xs transition-all text-slate-400">EN</button>
-            <button onclick="setMode('ru')" id="btnRu" class="px-4 py-2 rounded-xl font-bold text-xs transition-all text-slate-400">RU</button>
+        <div class="lang-wrapper">
+            <button onclick="setMode('uz')" id="btnUz" class="glass-nav-btn">UZ</button>
+            <button onclick="setMode('en')" id="btnEn" class="glass-nav-btn">EN</button>
+            <button onclick="setMode('ru')" id="btnRu" class="glass-nav-btn">RU</button>
         </div>
     </div>
 
-    <div id="authModal" class="fixed inset-0 z-[200] flex items-center justify-center modal-bg p-4">
-        <div class="glass p-10 rounded-[2.5rem] max-w-md w-full border-t-4 border-emerald-500 shadow-2xl text-center">
-            <h1 class="text-3xl font-black mb-6">EssayLab AI</h1>
+    <div id="authModal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
+        <div class="glass-card p-8 md:p-12 max-w-md w-full border-t-4 border-[var(--t-color)] text-center">
+            <h1 class="text-3xl font-black mb-6 tracking-tighter italic theme-text">EssayLab AI</h1>
             <div class="space-y-4 mb-8">
-                <input id="regName" type="text" class="w-full p-4 bg-black/20 rounded-xl outline-none border border-white/10" placeholder="Ism va Familiya">
-                <input id="regAlias" type="text" class="w-full p-4 bg-black/20 rounded-xl outline-none border border-white/10" placeholder="Taxallus (Username)">
-                <input id="regEmail" type="email" class="w-full p-4 bg-black/20 rounded-xl outline-none border border-white/10" placeholder="Email (Masalan: ali@gmail.com)">
+                <input id="regName" type="text" placeholder="Ism va Familiya" class="w-full p-4 rounded-xl outline-none">
+                <input id="regAlias" type="text" placeholder="Username (Taxallus)" class="w-full p-4 rounded-xl outline-none">
+                <input id="regEmail" type="email" placeholder="Email (masalan: user@gmail.com)" class="w-full p-4 rounded-xl outline-none">
             </div>
-            <button onclick="registerUser()" class="w-full neon-btn py-4 rounded-xl font-black text-white">KIRISH</button>
+            <button onclick="registerUser()" class="w-full neon-glow py-4 rounded-xl font-black text-white btn-pulse">KIRISH</button>
         </div>
     </div>
 
-    <div class="max-w-6xl mx-auto opacity-0 transition-opacity duration-1000" id="mainContent">
-        <header class="mb-8 flex justify-between items-center">
-            <h2 class="text-2xl font-black italic tracking-tighter theme-text">ESSAYLAB.AI</h2>
-            <p id="userStatus" class="text-[10px] font-bold opacity-50 uppercase tracking-widest"></p>
+    <div class="max-w-5xl mx-auto opacity-0 transition-opacity duration-1000 p-4 pt-20" id="mainContent">
+        <header class="mb-8">
+            <div class="text-center">
+                <h1 id="mainTitle" class="text-3xl md:text-5xl font-black mb-2 tracking-tight">Milliy sertifikat bo'limi</h1>
+                <div class="h-1.5 w-24 neon-glow mx-auto rounded-full mb-6"></div>
+                <p id="userTag" class="text-[10px] font-bold opacity-60 uppercase tracking-widest"></p>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             <div class="lg:col-span-8 space-y-6">
-                <div class="text-center md:text-left mb-4">
-                    <h1 id="mainTitle" class="text-3xl md:text-5xl font-extrabold tracking-tight">Milliy sertifikat bo'limi</h1>
-                    <div class="h-1.5 w-20 neon-btn rounded-full mt-2"></div>
-                </div>
-
-                <div class="glass p-8 rounded-[2.5rem] shadow-xl">
-                    <input id="topicInput" type="text" class="w-full p-5 bg-black/10 rounded-2xl mb-6 outline-none border border-white/5 focus:border-[var(--t-color)] transition text-lg" placeholder="Esse mavzusini kiriting...">
-                    <textarea id="essayInput" class="w-full h-96 p-6 bg-black/10 rounded-2xl outline-none border border-white/5 focus:border-[var(--t-color)] transition text-lg resize-none mb-6 leading-relaxed" placeholder="Matnni shu yerga yozing..."></textarea>
+                <div class="glass-card p-6 md:p-10">
+                    <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold border-b" placeholder="Esse mavzusi...">
+                    <textarea id="essayInput" class="w-full h-80 md:h-96 p-6 rounded-2xl outline-none resize-none mb-6 leading-relaxed" placeholder="Matnni shu yerga yozing..."></textarea>
                     
                     <div class="flex justify-between items-center">
-                        <span id="wordCount" class="text-xs font-black theme-text">0 TA SO'Z</span>
-                        <button id="checkBtn" class="neon-btn px-12 py-4 rounded-2xl font-black text-white text-xl active:scale-95 transition">TAHLIL</button>
+                        <div class="theme-text font-black text-xs"><span id="wordCount">0</span> SO'Z</div>
+                        <button id="checkBtn" class="neon-glow px-8 md:px-14 py-4 rounded-2xl font-black text-white btn-pulse">TAHLIL</button>
                     </div>
                 </div>
 
-                <div id="resultBox" class="hidden glass p-10 rounded-[2.5rem] border-l-[10px] border-[var(--t-color)]">
-                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
-                        <h2 class="text-2xl font-bold italic" id="resultLabel">Natija</h2>
-                        <button onclick="downloadPDF()" class="p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
-                            <i class="fas fa-file-pdf text-red-500 text-xl"></i>
-                        </button>
+                <div id="resultBox" class="hidden glass-card p-8 border-l-[10px] border-[var(--t-color)]">
+                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
+                        <h2 id="resultLabel" class="text-xl font-bold italic">Natija</h2>
+                        <button onclick="downloadPDF()" class="p-3 bg-white/5 rounded-xl text-red-500"><i class="fas fa-file-pdf"></i></button>
                     </div>
-                    <div id="resultContent" class="space-y-4 text-lg leading-relaxed"></div>
+                    <div id="resultContent" class="text-lg leading-loose"></div>
                 </div>
             </div>
 
             <div class="lg:col-span-4">
-                <div class="glass p-6 rounded-[2rem] sticky top-8">
-                    <h3 class="text-xs font-black opacity-50 uppercase mb-6 tracking-widest">Baholash Mezonlari</h3>
+                <div class="glass-card p-6 sticky top-24">
+                    <h3 class="text-[10px] font-black opacity-50 uppercase mb-6 tracking-widest">Mezonlar va Ballar</h3>
                     <div id="criteriaList" class="space-y-3"></div>
-                    
                     <div id="loader" class="hidden mt-8 text-center animate-pulse">
-                        <div class="w-10 h-10 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-                        <p class="theme-text font-bold text-[10px]">AI ISHLAMOQDA...</p>
+                        <div class="w-8 h-8 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
+                        <p class="theme-text font-bold text-[8px]">AI TAHLIL QILMOQDA...</p>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const GROQ_API_KEY = "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";
-        let currentMode = 'uz';
-        let isLight = false;
-
-        const langData = {
-            uz: { title: "Milliy sertifikat bo'limi", btn: "TAHLIL", res: "Ekspert Xulosasi", crit: ["Mavzu (4 ball)", "Mantiq (3 ball)", "Imlo (3 ball)", "Tinish belgisi (2 ball)", "Uslub (3 ball)"], prompt: "O'zbek tili eksperti sifatida 15 ballik tizimda tahlil qil." },
-            en: { title: "IELTS Exam Center", btn: "ANALYZE", res: "Examiner Feedback", crit: ["Task Response (9.0)", "Coherence (9.0)", "Lexical (9.0)", "Grammar (9.0)"], prompt: "IELTS Writing Examiner. Grade out of 9.0 band score." },
-            ru: { title: "Национальный сертификат (РУС)", btn: "АНАЛИЗ", res: "Отчет эксперта", crit: ["Содержание (3 балла)", "Логика (2 балла)", "Грамматика (3 балла)", "Стиль (2 балла)"], prompt: "Эксперт по русскому языку. Оцени по 10-бальной шкале." }
-        };
-
-        function toggleTheme() {
-            isLight = !isLight;
-            document.body.classList.toggle('light-mode');
-            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
-        }
-
-        function registerUser() {
-            const name = document.getElementById('regName').value;
-            const alias = document.getElementById('regAlias').value;
-            const email = document.getElementById('regEmail').value;
-
-            // Email validatsiyasi
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if(!name || !alias || !emailRegex.test(email)) return alert("Ma'lumotlar xato yoki Email noto'g'ri!");
-
-            document.getElementById('authModal').classList.add('hidden');
-            document.getElementById('mainContent').classList.replace('opacity-0', 'opacity-100');
-            document.getElementById('userStatus').innerText = `${alias} | ${email}`;
-        }
-
-        function setMode(mode) {
-            currentMode = mode;
-            const c = langData[mode];
-            document.getElementById('mainBody').className = (isLight ? 'light-mode ' : '') + `min-h-screen p-4 md:p-8 mode-${mode}`;
-            document.getElementById('mainTitle').innerText = c.title;
-            document.getElementById('checkBtn').innerText = c.btn;
-            document.getElementById('resultLabel').innerText = c.res;
-            document.getElementById('criteriaList').innerHTML = c.crit.map(i => `<div class="p-4 bg-black/5 rounded-xl border border-white/5 text-[10px] font-bold theme-text uppercase">${i}</div>`).join('');
-            
-            ['uz', 'en', 'ru'].forEach(m => {
-                document.getElementById('btn' + m.charAt(0).toUpperCase() + m.slice(1)).className = 
-                mode === m ? `px-4 py-2 rounded-xl font-bold text-xs neon-btn text-white` : `px-4 py-2 rounded-xl font-bold text-xs text-slate-400`;
-            });
-        }
-
-        document.getElementById('checkBtn').onclick = async () => {
-            const topic = document.getElementById('topicInput').value;
-            const text = document.getElementById('essayInput').value;
-            if(!topic || text.length < 50) return alert("Mavzu yoki matn yetarli emas!");
-
-            document.getElementById('loader').classList.remove('hidden');
-            document.getElementById('resultBox').classList.add('hidden');
-
-            try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
-                        messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Topic: ${topic}\nContent: ${text}` }]
-                    })
-                });
-                const data = await res.json();
-                document.getElementById('resultContent').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b class="theme-text">$1</b>');
-                document.getElementById('resultBox').classList.remove('hidden');
-            } catch (e) { alert("Xatolik!"); }
-            finally { document.getElementById('loader').classList.add('hidden'); }
-        };
-
-        function downloadPDF() {
-            const element = document.getElementById('resultBox');
-            html2pdf().set({ filename: 'EssayLab-Report.pdf', html2canvas: { scale: 2, backgroundColor: isLight ? '#f8fafc' : '#020617' } }).from(element).save();
-        }
-
-        document.getElementById('essayInput').oninput = function() {
-            const count = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
-            document.getElementById('wordCount').innerText = count + " TA SO'Z";
-        };
-
-        setMode('uz');
-    </script>
     <script src="app.js"></script>
 </body>
 </html>
