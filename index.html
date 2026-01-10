@@ -3,111 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab - Global Exam Prep</title>
+    <title>EssayLab AI - Professional Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        :root { --t-color: #10b981; --t-bg: rgba(16, 185, 129, 0.2); }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #020617; color: white; transition: 0.5s ease; }
-        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.08); }
-        .mode-uz { --t-color: #10b981; }
-        .mode-en { --t-color: #3b82f6; }
-        .mode-ru { --t-color: #f43f5e; }
-        .theme-text { color: var(--t-color); }
-        .theme-btn { background: var(--t-color); }
-        .theme-border { border-color: var(--t-color); }
-        .modal-blur { background: rgba(2, 6, 23, 0.98); backdrop-filter: blur(15px); }
         
-        /* Oyna simon til tanlagich */
-        .lang-float {
-            position: fixed; top: 20px; right: 20px; z-index: 100;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 18px;
-            padding: 6px;
-        }
+        :root { --t-color: #10b981; --t-shadow: rgba(16, 185, 129, 0.5); --body-bg: #020617; --card-bg: rgba(15, 23, 42, 0.7); --text: #ffffff; }
+        .light-mode { --t-color: #3b82f6; --t-shadow: rgba(59, 130, 246, 0.3); --body-bg: #f8fafc; --card-bg: rgba(255, 255, 255, 0.8); --text: #1e293b; }
+
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--body-bg); color: var(--text); transition: 0.5s ease; }
+        .glass { background: var(--card-bg); backdrop-filter: blur(20px); border: 1px solid rgba(128, 128, 128, 0.1); }
+        
+        /* Neon Tugmalar */
+        .neon-btn { background: var(--t-color); box-shadow: 0 0 15px var(--t-shadow); transition: 0.3s; }
+        .neon-btn:hover { box-shadow: 0 0 25px var(--t-color); transform: translateY(-2px); }
+
+        /* Shaffof Til Tanlagich */
+        .glass-nav { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; }
+        
+        .mode-uz { --t-color: #10b981; --t-shadow: rgba(16, 185, 129, 0.4); }
+        .mode-en { --t-color: #3b82f6; --t-shadow: rgba(59, 130, 246, 0.4); }
+        .mode-ru { --t-color: #f43f5e; --t-shadow: rgba(244, 63, 94, 0.4); }
+
+        .modal-bg { background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-12 mode-uz" id="mainBody">
+<body class="min-h-screen p-4 md:p-8 mode-uz" id="mainBody">
 
-    <div class="lang-float flex gap-2 no-print" id="langSwitcher" style="display: none;">
-        <button onclick="setMode('uz')" id="btnUz" class="px-4 py-2 rounded-xl font-bold text-xs transition-all bg-emerald-600 text-white">UZ</button>
-        <button onclick="setMode('en')" id="btnEn" class="px-4 py-2 rounded-xl font-bold text-xs transition-all text-slate-400">EN</button>
-        <button onclick="setMode('ru')" id="btnRu" class="px-4 py-2 rounded-xl font-bold text-xs transition-all text-slate-400">RU</button>
+    <div class="fixed top-6 right-6 flex items-center gap-4 z-[100] no-print">
+        <button onclick="toggleTheme()" class="glass-nav p-3 text-lg hover:scale-110 transition">
+            <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
+        </button>
+        <div class="glass-nav p-1 flex gap-1">
+            <button onclick="setMode('uz')" id="btnUz" class="px-4 py-2 rounded-xl font-bold text-xs transition-all neon-btn text-white">UZ</button>
+            <button onclick="setMode('en')" id="btnEn" class="px-4 py-2 rounded-xl font-bold text-xs transition-all text-slate-400">EN</button>
+            <button onclick="setMode('ru')" id="btnRu" class="px-4 py-2 rounded-xl font-bold text-xs transition-all text-slate-400">RU</button>
+        </div>
     </div>
 
-    <div id="authModal" class="fixed inset-0 z-[200] flex items-center justify-center modal-blur p-4">
-        <div class="glass p-10 rounded-[3rem] max-w-lg w-full border-t-4 theme-border shadow-2xl">
-            <h2 class="text-4xl font-black mb-2 text-center">Ro'yxatdan o'tish</h2>
-            <p class="text-slate-500 text-sm mb-10 text-center uppercase tracking-widest font-bold italic">Tizimga kirish uchun ma'lumotlarni to'ldiring</p>
-            
-            <div class="space-y-4">
-                <div class="relative">
-                    <i class="fas fa-user absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input id="regName" type="text" class="w-full p-5 pl-14 bg-slate-900/50 rounded-2xl outline-none border border-white/5 focus:border-emerald-500 transition" placeholder="Ism va Familiya">
-                </div>
-                <div class="relative">
-                    <i class="fas fa-at absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input id="regAlias" type="text" class="w-full p-5 pl-14 bg-slate-900/50 rounded-2xl outline-none border border-white/5 focus:border-emerald-500 transition" placeholder="Taxallus (Username)">
-                </div>
-                <div class="relative">
-                    <i class="fas fa-envelope absolute left-5 top-1/2 -translate-y-1/2 text-slate-500"></i>
-                    <input id="regEmail" type="email" class="w-full p-5 pl-14 bg-slate-900/50 rounded-2xl outline-none border border-white/5 focus:border-emerald-500 transition" placeholder="Email manzilingiz">
-                </div>
+    <div id="authModal" class="fixed inset-0 z-[200] flex items-center justify-center modal-bg p-4">
+        <div class="glass p-10 rounded-[2.5rem] max-w-md w-full border-t-4 border-emerald-500 shadow-2xl text-center">
+            <h1 class="text-3xl font-black mb-6">EssayLab AI</h1>
+            <div class="space-y-4 mb-8">
+                <input id="regName" type="text" class="w-full p-4 bg-black/20 rounded-xl outline-none border border-white/10" placeholder="Ism va Familiya">
+                <input id="regAlias" type="text" class="w-full p-4 bg-black/20 rounded-xl outline-none border border-white/10" placeholder="Taxallus (Username)">
+                <input id="regEmail" type="email" class="w-full p-4 bg-black/20 rounded-xl outline-none border border-white/10" placeholder="Email (Masalan: ali@gmail.com)">
             </div>
-
-            <button onclick="registerUser()" class="w-full theme-btn mt-8 py-5 rounded-[2rem] font-black text-xl shadow-xl hover:scale-[1.02] transition active:scale-95">
-                DAVOM ETISH
-            </button>
+            <button onclick="registerUser()" class="w-full neon-btn py-4 rounded-xl font-black text-white">KIRISH</button>
         </div>
     </div>
 
     <div class="max-w-6xl mx-auto opacity-0 transition-opacity duration-1000" id="mainContent">
-        <header class="mb-16 text-center">
-            <p id="userWelcome" class="text-slate-500 font-bold text-sm mb-4 uppercase tracking-[0.4em]"></p>
-            <h1 id="mainTitle" class="text-5xl md:text-7xl font-black tracking-tighter mb-4">Milliy sertifikat bo'limi</h1>
-            <div class="h-2 w-48 theme-btn mx-auto rounded-full shadow-lg shadow-emerald-500/20"></div>
+        <header class="mb-8 flex justify-between items-center">
+            <h2 class="text-2xl font-black italic tracking-tighter theme-text">ESSAYLAB.AI</h2>
+            <p id="userStatus" class="text-[10px] font-bold opacity-50 uppercase tracking-widest"></p>
         </header>
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-10">
-            <div class="lg:col-span-8 space-y-8">
-                <div class="glass p-10 rounded-[3.5rem] relative shadow-2xl border-t border-white/5">
-                    <input id="topicInput" type="text" class="w-full p-6 bg-slate-900/40 rounded-2xl mb-6 outline-none border border-white/5 focus:border-emerald-500 transition text-xl font-semibold" placeholder="Mavzuni kiriting...">
-                    <textarea id="essayInput" class="w-full h-[500px] p-8 bg-slate-900/40 rounded-3xl outline-none border border-white/5 focus:border-emerald-500 transition text-lg resize-none mb-8 leading-relaxed" placeholder="Esse matnini yozishni boshlang..."></textarea>
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-8 space-y-6">
+                <div class="text-center md:text-left mb-4">
+                    <h1 id="mainTitle" class="text-3xl md:text-5xl font-extrabold tracking-tight">Milliy sertifikat bo'limi</h1>
+                    <div class="h-1.5 w-20 neon-btn rounded-full mt-2"></div>
+                </div>
+
+                <div class="glass p-8 rounded-[2.5rem] shadow-xl">
+                    <input id="topicInput" type="text" class="w-full p-5 bg-black/10 rounded-2xl mb-6 outline-none border border-white/5 focus:border-[var(--t-color)] transition text-lg" placeholder="Esse mavzusini kiriting...">
+                    <textarea id="essayInput" class="w-full h-96 p-6 bg-black/10 rounded-2xl outline-none border border-white/5 focus:border-[var(--t-color)] transition text-lg resize-none mb-6 leading-relaxed" placeholder="Matnni shu yerga yozing..."></textarea>
                     
                     <div class="flex justify-between items-center">
-                        <div class="flex gap-4">
-                            <span id="wordCount" class="text-xs font-black theme-text bg-white/5 border border-white/5 px-6 py-3 rounded-2xl">0 TA SO'Z</span>
-                        </div>
-                        <button id="checkBtn" class="theme-btn px-16 py-5 rounded-[2rem] font-black text-2xl shadow-2xl active:scale-95 transition-all flex items-center gap-3">
-                            <i class="fas fa-bolt"></i> <span id="btnLabel">TAHLIL</span>
-                        </button>
+                        <span id="wordCount" class="text-xs font-black theme-text">0 TA SO'Z</span>
+                        <button id="checkBtn" class="neon-btn px-12 py-4 rounded-2xl font-black text-white text-xl active:scale-95 transition">TAHLIL</button>
                     </div>
                 </div>
 
-                <div id="resultBox" class="hidden glass p-12 rounded-[3.5rem] border-l-[12px] theme-border animate-in fade-in slide-in-from-bottom-10 duration-700">
-                    <div class="flex justify-between items-center mb-10">
-                        <h2 class="text-3xl font-black italic" id="resultLabel">Ekspert Tahlili</h2>
-                        <button onclick="downloadPDF()" class="bg-white/10 hover:bg-white/20 p-4 rounded-2xl transition shadow-xl">
-                            <i class="fas fa-file-pdf text-2xl text-red-500"></i>
+                <div id="resultBox" class="hidden glass p-10 rounded-[2.5rem] border-l-[10px] border-[var(--t-color)]">
+                    <div class="flex justify-between items-center mb-8 pb-4 border-b border-white/10">
+                        <h2 class="text-2xl font-bold italic" id="resultLabel">Natija</h2>
+                        <button onclick="downloadPDF()" class="p-3 bg-white/5 rounded-xl hover:bg-white/10 transition">
+                            <i class="fas fa-file-pdf text-red-500 text-xl"></i>
                         </button>
                     </div>
-                    <div id="resultContent" class="text-slate-200 space-y-6 text-xl leading-loose"></div>
+                    <div id="resultContent" class="space-y-4 text-lg leading-relaxed"></div>
                 </div>
             </div>
 
             <div class="lg:col-span-4">
-                <div class="glass p-8 rounded-[2.5rem] sticky top-12 border-b-4 theme-border">
-                    <h3 class="text-xs font-black text-slate-500 uppercase mb-8 tracking-[0.3em] flex justify-between items-center">
-                        Mezonlar <i class="fas fa-chart-line theme-text"></i>
-                    </h3>
-                    <div id="criteriaList" class="space-y-4"></div>
-                    <div id="loader" class="hidden mt-10 text-center">
-                        <div class="w-12 h-12 border-4 theme-border border-t-transparent rounded-full animate-spin mx-auto mb-6"></div>
-                        <p class="theme-text font-black text-xs animate-pulse tracking-widest" id="loaderText">AI TAHLIL QILMOQDA...</p>
+                <div class="glass p-6 rounded-[2rem] sticky top-8">
+                    <h3 class="text-xs font-black opacity-50 uppercase mb-6 tracking-widest">Baholash Mezonlari</h3>
+                    <div id="criteriaList" class="space-y-3"></div>
+                    
+                    <div id="loader" class="hidden mt-8 text-center animate-pulse">
+                        <div class="w-10 h-10 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+                        <p class="theme-text font-bold text-[10px]">AI ISHLAMOQDA...</p>
                     </div>
                 </div>
             </div>
@@ -117,50 +106,53 @@
     <script>
         const GROQ_API_KEY = "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";
         let currentMode = 'uz';
-        let userData = {};
+        let isLight = false;
 
         const langData = {
-            uz: { title: "Milliy sertifikat bo'limi", btn: "TAHLIL", plh: "Esse mavzusini kiriting...", res: "Ekspert Tahlili", loader: "AI TAHLIL QILMOQDA...", crit: ["Mavzu tahlili", "Mantiqiy izchillik", "Imlo xatolari", "Punktuatsiya", "Uslubiy mahorat"], prompt: "O'zbek tili eksperti sifatida 15 ballik tizimda tahlil qil." },
-            en: { title: "IELTS Exam Department", btn: "ANALYZE", plh: "Enter Writing Task 2 Topic...", res: "Examiner Report", loader: "EXAMINER IS EVALUATING...", crit: ["Task Response", "Coherence", "Lexical Resource", "Grammar Range"], prompt: "IELTS Examiner mode. Grade out of 9.0 and give detailed feedback." },
-            ru: { title: "Отдел национального сертификата", btn: "АНАЛИЗ", plh: "Введите тему эссе...", res: "Отчет эксперта", loader: "ИИ ПРОВОДИТ АНАЛИЗ...", crit: ["Содержание", "Логика и связь", "Грамматика", "Стиль изложения"], prompt: "Эксперт по русскому языку. Оцени по 10-бальной шкале." }
+            uz: { title: "Milliy sertifikat bo'limi", btn: "TAHLIL", res: "Ekspert Xulosasi", crit: ["Mavzu (4 ball)", "Mantiq (3 ball)", "Imlo (3 ball)", "Tinish belgisi (2 ball)", "Uslub (3 ball)"], prompt: "O'zbek tili eksperti sifatida 15 ballik tizimda tahlil qil." },
+            en: { title: "IELTS Exam Center", btn: "ANALYZE", res: "Examiner Feedback", crit: ["Task Response (9.0)", "Coherence (9.0)", "Lexical (9.0)", "Grammar (9.0)"], prompt: "IELTS Writing Examiner. Grade out of 9.0 band score." },
+            ru: { title: "Национальный сертификат (РУС)", btn: "АНАЛИЗ", res: "Отчет эксперта", crit: ["Содержание (3 балла)", "Логика (2 балла)", "Грамматика (3 балла)", "Стиль (2 балла)"], prompt: "Эксперт по русскому языку. Оцени по 10-бальной шкале." }
         };
+
+        function toggleTheme() {
+            isLight = !isLight;
+            document.body.classList.toggle('light-mode');
+            document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
+        }
 
         function registerUser() {
             const name = document.getElementById('regName').value;
             const alias = document.getElementById('regAlias').value;
             const email = document.getElementById('regEmail').value;
 
-            if(!name || !alias || !email) return alert("Barcha maydonlarni to'ldiring!");
-            
-            userData = { name, alias, email };
+            // Email validatsiyasi
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if(!name || !alias || !emailRegex.test(email)) return alert("Ma'lumotlar xato yoki Email noto'g'ri!");
+
             document.getElementById('authModal').classList.add('hidden');
             document.getElementById('mainContent').classList.replace('opacity-0', 'opacity-100');
-            document.getElementById('langSwitcher').style.display = 'flex';
-            document.getElementById('userWelcome').innerText = `Xush kelibsiz, ${userData.alias} (${userData.name})`;
+            document.getElementById('userStatus').innerText = `${alias} | ${email}`;
         }
 
         function setMode(mode) {
             currentMode = mode;
             const c = langData[mode];
-            document.getElementById('mainBody').className = `min-h-screen p-4 md:p-12 mode-${mode}`;
+            document.getElementById('mainBody').className = (isLight ? 'light-mode ' : '') + `min-h-screen p-4 md:p-8 mode-${mode}`;
             document.getElementById('mainTitle').innerText = c.title;
-            document.getElementById('btnLabel').innerText = c.btn;
-            document.getElementById('topicInput').placeholder = c.plh;
+            document.getElementById('checkBtn').innerText = c.btn;
             document.getElementById('resultLabel').innerText = c.res;
-            document.getElementById('loaderText').innerText = c.loader;
-
-            document.getElementById('criteriaList').innerHTML = c.crit.map(i => `<div class="p-4 bg-white/5 rounded-2xl border border-white/5 text-[11px] theme-text font-black uppercase tracking-widest">${i}</div>`).join('');
+            document.getElementById('criteriaList').innerHTML = c.crit.map(i => `<div class="p-4 bg-black/5 rounded-xl border border-white/5 text-[10px] font-bold theme-text uppercase">${i}</div>`).join('');
             
             ['uz', 'en', 'ru'].forEach(m => {
-                const btn = document.getElementById('btn' + m.charAt(0).toUpperCase() + m.slice(1));
-                btn.className = mode === m ? `px-4 py-2 rounded-xl font-bold text-xs theme-btn text-white` : `px-4 py-2 rounded-xl font-bold text-xs text-slate-400`;
+                document.getElementById('btn' + m.charAt(0).toUpperCase() + m.slice(1)).className = 
+                mode === m ? `px-4 py-2 rounded-xl font-bold text-xs neon-btn text-white` : `px-4 py-2 rounded-xl font-bold text-xs text-slate-400`;
             });
         }
 
         document.getElementById('checkBtn').onclick = async () => {
             const topic = document.getElementById('topicInput').value;
             const text = document.getElementById('essayInput').value;
-            if(!topic || text.length < 50) return alert("Mavzu va matnni to'liq kiriting!");
+            if(!topic || text.length < 50) return alert("Mavzu yoki matn yetarli emas!");
 
             document.getElementById('loader').classList.remove('hidden');
             document.getElementById('resultBox').classList.add('hidden');
@@ -171,26 +163,24 @@
                     headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
                     body: JSON.stringify({
                         model: "llama-3.3-70b-versatile",
-                        messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `User: ${userData.name}, Alias: ${userData.alias}, Email: ${userData.email}\nTopic: ${topic}\nContent: ${text}` }]
+                        messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Topic: ${topic}\nContent: ${text}` }]
                     })
                 });
                 const data = await res.json();
-                document.getElementById('resultContent').innerHTML = `<b>Hisobot kim uchun: ${userData.name} (@${userData.alias})</b><br><br>` + data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b class="theme-text">$1</b>');
+                document.getElementById('resultContent').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b class="theme-text">$1</b>');
                 document.getElementById('resultBox').classList.remove('hidden');
-                document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
-            } catch (e) { alert("Xatolik yuz berdi!"); }
+            } catch (e) { alert("Xatolik!"); }
             finally { document.getElementById('loader').classList.add('hidden'); }
         };
 
         function downloadPDF() {
             const element = document.getElementById('resultBox');
-            html2pdf().set({ margin: 0.5, filename: `Report-${userData.alias}.pdf`, html2canvas: { scale: 2, backgroundColor: '#020617' } }).from(element).save();
+            html2pdf().set({ filename: 'EssayLab-Report.pdf', html2canvas: { scale: 2, backgroundColor: isLight ? '#f8fafc' : '#020617' } }).from(element).save();
         }
 
         document.getElementById('essayInput').oninput = function() {
             const count = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
-            const lbl = {uz: " TA SO'Z", en: " WORDS", ru: " СЛОВ"}[currentMode];
-            document.getElementById('wordCount').innerText = count + lbl;
+            document.getElementById('wordCount').innerText = count + " TA SO'Z";
         };
 
         setMode('uz');
