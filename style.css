@@ -1,106 +1,175 @@
-/* Asosiy shrift va o'zgaruvchilar */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-
 :root {
-    /* Tungi rejim (Siniy va yashil neon aralashmasi) */
     --t-color: #00ff88;
     --t-shadow: rgba(0, 255, 136, 0.4);
-    --body-bg: #020c1b; /* To'q siniy (deep navy) */
-    --card-bg: rgba(10, 25, 47, 0.75);
-    --text: #e6f1ff;
-    --input-bg: rgba(2, 12, 27, 0.6);
+    --body-bg: #020c1b;
+    --text: #ffffff;
+    --card-bg: rgba(10, 25, 47, 0.7);
 }
 
-/* Kun rejimi (Siz xohlagandek oq fon va siniy tugmalar) */
 .light-mode {
     --t-color: #3b82f6;
     --t-shadow: rgba(59, 130, 246, 0.3);
     --body-bg: #f8fafc;
-    --card-bg: rgba(255, 255, 255, 0.85);
-    --text: #0f172a;
-    --input-bg: rgba(241, 245, 249, 0.9);
-}
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+    --text: #1e293b;
+    --card-bg: rgba(255, 255, 255, 0.9);
 }
 
 body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--body-bg);
     color: var(--text);
-    min-height: 100vh;
-    transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), color 0.5s;
-    /* Orqa fondagi yorqin nurli gradientlar */
-    background-image: 
-        radial-gradient(circle at 50% -20%, var(--t-shadow), transparent 55%),
-        radial-gradient(circle at 5% 100%, rgba(0, 210, 255, 0.15), transparent 45%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: 0.5s ease;
+    /* Fon "yonishi" effekti */
+    background-image: radial-gradient(circle at 50% 0%, var(--t-shadow) 0%, transparent 50%);
     background-attachment: fixed;
 }
 
-/* Glassmorphism kartochkalari */
+.theme-text { color: var(--t-color); }
+
+.nav-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lang-wrapper {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.05);
+    padding: 4px;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.glass-nav-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 10px;
+    color: var(--text);
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
 .glass-card {
     background: var(--card-bg);
-    backdrop-filter: blur(25px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 35px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
 }
 
-/* NEON TUGMALAR (Yorqin nur taratuvchi) */
 .neon-glow {
     background: var(--t-color) !important;
-    color: white !important;
-    box-shadow: 0 0 20px var(--t-shadow), 0 0 45px var(--t-shadow);
+    box-shadow: 0 0 20px var(--t-color), 0 0 40px var(--t-shadow);
     border: none;
-    cursor: pointer;
-    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    text-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
-    font-weight: 800;
+    transition: 0.3s;
 }
 
-.neon-glow:hover {
-    box-shadow: 0 0 35px var(--t-color), 0 0 70px var(--t-shadow);
-    transform: translateY(-4px) scale(1.03);
-    filter: brightness(1.2);
+.btn-pulse { animation: pulse 2s infinite; }
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
+    50% { transform: scale(1.02); box-shadow: 0 0 40px var(--t-color); }
+    100% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
 }
 
-/* Asosiy Analiz tugmasi uchun pulsatsiya */
-.btn-pulse {
-    animation: neon-pulse 2.5s infinite;
-}
-
-@keyframes neon-pulse {
-    0% { box-shadow: 0 0 20px var(--t-shadow), 0 0 40px var(--t-shadow); }
-    50% { box-shadow: 0 0 45px var(--t-color), 0 0 85px var(--t-shadow); }
-    100% { box-shadow: 0 0 20px var(--t-shadow), 0 0 40px var(--t-shadow); }
-}
-
-/* Shishasimon til tanlagich */
-.glass-nav {
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 20px;
-    padding: 6px;
-}
-
-/* Input va Textarea */
 input, textarea {
-    background: var(--input-bg) !important;
+    background: rgba(0,0,0,0.2) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
     color: var(--text) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
-    transition: all 0.3s ease;
 }
 
-input:focus, textarea:focus {
-    border-color: var(--t-color) !important;
-    box-shadow: 0 0 15px var(--t-shadow);
+@media (max-width: 768px) {
+    #mainTitle { font-size: 1.8rem; }
+    .nav-container { top: 10px; right: 10px; scale: 0.9; }
+}:root {
+    --t-color: #00ff88;
+    --t-shadow: rgba(0, 255, 136, 0.4);
+    --body-bg: #020c1b;
+    --text: #ffffff;
+    --card-bg: rgba(10, 25, 47, 0.7);
 }
 
-/* No-print (PDF yuklaganda keraksiz qismlarni yashirish) */
-@media print {
-    .no-print { display: none !important; }
+.light-mode {
+    --t-color: #3b82f6;
+    --t-shadow: rgba(59, 130, 246, 0.3);
+    --body-bg: #f8fafc;
+    --text: #1e293b;
+    --card-bg: rgba(255, 255, 255, 0.9);
+}
+
+body {
+    background-color: var(--body-bg);
+    color: var(--text);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    transition: 0.5s ease;
+    /* Fon "yonishi" effekti */
+    background-image: radial-gradient(circle at 50% 0%, var(--t-shadow) 0%, transparent 50%);
+    background-attachment: fixed;
+}
+
+.theme-text { color: var(--t-color); }
+
+.nav-container {
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.lang-wrapper {
+    display: flex;
+    gap: 4px;
+    background: rgba(255,255,255,0.05);
+    padding: 4px;
+    border-radius: 14px;
+    backdrop-filter: blur(10px);
+}
+
+.glass-nav-btn {
+    padding: 6px 12px;
+    font-size: 11px;
+    font-weight: 800;
+    border-radius: 10px;
+    color: var(--text);
+    opacity: 0.6;
+    transition: 0.3s;
+}
+
+.glass-card {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 28px;
+}
+
+.neon-glow {
+    background: var(--t-color) !important;
+    box-shadow: 0 0 20px var(--t-color), 0 0 40px var(--t-shadow);
+    border: none;
+    transition: 0.3s;
+}
+
+.btn-pulse { animation: pulse 2s infinite; }
+@keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
+    50% { transform: scale(1.02); box-shadow: 0 0 40px var(--t-color); }
+    100% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
+}
+
+input, textarea {
+    background: rgba(0,0,0,0.2) !important;
+    border: 1px solid rgba(255,255,255,0.1) !important;
+    color: var(--text) !important;
+}
+
+@media (max-width: 768px) {
+    #mainTitle { font-size: 1.8rem; }
+    .nav-container { top: 10px; right: 10px; scale: 0.9; }
 }
