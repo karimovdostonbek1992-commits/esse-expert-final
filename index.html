@@ -3,13 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Milliy Sertifikat</title>
+    <title>EssayLab AI Pro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="mode-uz" id="mainBody">
+
+    <button id="menuBtn" class="fixed top-5 left-5 z-[3000] p-3 glass-nav-btn text-xl no-print">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#020c1b] z-[2500] transform -translate-x-full transition-transform duration-300 border-r border-white/10 backdrop-blur-xl">
+        <div class="p-8 pt-24">
+            <h2 class="text-2xl font-black theme-text italic mb-10 tracking-tighter">EssayLab AI</h2>
+            <nav class="space-y-4">
+                <button onclick="switchTab('writing')" class="w-full text-left p-4 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-white">
+                    <i class="fas fa-pen-nib theme-text"></i> <span class="font-bold">Writing (Esse)</span>
+                </button>
+                <button onclick="switchTab('speaking')" class="w-full text-left p-4 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-white">
+                    <i class="fas fa-microphone theme-text"></i> <span class="font-bold">Speaking (AI Coach)</span>
+                </button>
+            </nav>
+        </div>
+    </div>
 
     <div class="nav-container no-print">
         <button onclick="toggleTheme()" id="themeToggleBtn" class="glass-nav-btn">
@@ -22,60 +40,75 @@
         </div>
     </div>
 
-    <div id="authModal" class="fixed inset-0 z-[2000] flex items-center justify-center bg-black/90 backdrop-blur-xl p-4">
-        <div class="glass-card p-8 md:p-12 max-w-md w-full border-t-4 border-[var(--t-color)] text-center">
-            <h1 class="text-3xl font-black mb-6 tracking-tighter italic theme-text">EssayLab AI</h1>
+    <div id="authModal" class="fixed inset-0 z-[4000] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4">
+        <div class="glass-card p-10 max-w-md w-full border-t-4 border-[var(--t-color)] text-center">
+            <h1 class="text-4xl font-black mb-6 tracking-tighter theme-text">EssayLab AI</h1>
             <div class="space-y-4 mb-8">
-                <input id="regName" type="text" placeholder="Ism va Familiya" class="w-full p-4 rounded-xl outline-none">
-                <input id="regAlias" type="text" placeholder="Username (Taxallus)" class="w-full p-4 rounded-xl outline-none">
-                <input id="regEmail" type="email" placeholder="Email (masalan: user@gmail.com)" class="w-full p-4 rounded-xl outline-none">
+                <input id="regName" type="text" placeholder="Ism va Familiya" class="w-full p-4 rounded-xl">
+                <input id="regAlias" type="text" placeholder="Username" class="w-full p-4 rounded-xl">
+                <input id="regEmail" type="email" placeholder="Email (user@gmail.com)" class="w-full p-4 rounded-xl">
             </div>
             <button onclick="registerUser()" class="w-full neon-glow py-4 rounded-xl font-black text-white btn-pulse">KIRISH</button>
         </div>
     </div>
 
-    <div class="max-w-5xl mx-auto opacity-0 transition-opacity duration-1000 p-4 pt-20" id="mainContent">
-        <header class="mb-8">
-            <div class="text-center">
-                <h1 id="mainTitle" class="text-3xl md:text-5xl font-black mb-2 tracking-tight">Milliy sertifikat bo'limi</h1>
-                <div class="h-1.5 w-24 neon-glow mx-auto rounded-full mb-6"></div>
-                <p id="userTag" class="text-[10px] font-bold opacity-60 uppercase tracking-widest"></p>
+    <main id="mainContent" class="opacity-0 transition-opacity duration-1000 max-w-5xl mx-auto p-4 pt-24">
+        
+        <section id="writingPage" class="content-section space-y-8">
+            <div class="text-center mb-10">
+                <h1 id="mainTitle" class="text-4xl md:text-5xl font-black mb-2">Milliy sertifikat bo'limi</h1>
+                <p id="userTag" class="text-[10px] font-bold opacity-50 tracking-widest uppercase"></p>
             </div>
-        </header>
-
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-8 space-y-6">
-                <div class="glass-card p-6 md:p-10">
-                    <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold border-b" placeholder="Esse mavzusi...">
-                    <textarea id="essayInput" class="w-full h-80 md:h-96 p-6 rounded-2xl outline-none resize-none mb-6 leading-relaxed" placeholder="Matnni shu yerga yozing..."></textarea>
-                    
-                    <div class="flex justify-between items-center">
-                        <div class="theme-text font-black text-xs"><span id="wordCount">0</span> SO'Z</div>
-                        <button id="checkBtn" class="neon-glow px-8 md:px-14 py-4 rounded-2xl font-black text-white btn-pulse">TAHLIL</button>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="lg:col-span-8 space-y-6">
+                    <div class="glass-card p-6 md:p-10">
+                        <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold" placeholder="Esse mavzusi...">
+                        <textarea id="essayInput" class="w-full h-80 p-6 rounded-2xl outline-none resize-none mb-6 leading-relaxed" placeholder="Matnni shu yerga yozing..."></textarea>
+                        <div class="flex justify-between items-center">
+                            <div class="theme-text font-black text-xs"><span id="wordCount">0</span> SO'Z</div>
+                            <button id="checkBtn" class="neon-glow px-12 py-4 rounded-2xl font-black text-white">TAHLIL</button>
+                        </div>
+                    </div>
+                    <div id="resultBox" class="hidden glass-card p-8 border-l-[10px] border-[var(--t-color)]">
+                        <div id="resultContent" class="text-lg leading-loose"></div>
                     </div>
                 </div>
-
-                <div id="resultBox" class="hidden glass-card p-8 border-l-[10px] border-[var(--t-color)]">
-                    <div class="flex justify-between items-center mb-6 border-b border-white/10 pb-4">
-                        <h2 id="resultLabel" class="text-xl font-bold italic">Natija</h2>
-                        <button onclick="downloadPDF()" class="p-3 bg-white/5 rounded-xl text-red-500"><i class="fas fa-file-pdf"></i></button>
-                    </div>
-                    <div id="resultContent" class="text-lg leading-loose"></div>
-                </div>
-            </div>
-
-            <div class="lg:col-span-4">
-                <div class="glass-card p-6 sticky top-24">
-                    <h3 class="text-[10px] font-black opacity-50 uppercase mb-6 tracking-widest">Mezonlar va Ballar</h3>
-                    <div id="criteriaList" class="space-y-3"></div>
-                    <div id="loader" class="hidden mt-8 text-center animate-pulse">
-                        <div class="w-8 h-8 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-                        <p class="theme-text font-bold text-[8px]">AI TAHLIL QILMOQDA...</p>
+                <div class="lg:col-span-4">
+                    <div class="glass-card p-6 sticky top-24">
+                        <h3 class="text-[10px] font-black opacity-50 mb-6 tracking-widest uppercase">Baholash Mezonlari</h3>
+                        <div id="criteriaList" class="space-y-3"></div>
                     </div>
                 </div>
             </div>
+        </section>
+
+        <section id="speakingPage" class="content-section hidden">
+            <div class="glass-card p-10 text-center max-w-2xl mx-auto">
+                <h2 class="text-3xl font-black mb-6 theme-text italic">AI Speaking Coach</h2>
+                <p id="speakingQuestion" class="text-xl font-bold mb-10 opacity-80 italic">"What are the advantages of using technology in education?"</p>
+                
+                <div class="relative inline-block mb-10">
+                    <div id="micRipple" class="absolute inset-0 bg-[var(--t-color)] rounded-full opacity-0"></div>
+                    <button id="recordBtn" class="relative z-10 w-28 h-28 rounded-full neon-glow flex items-center justify-center text-4xl text-white">
+                        <i class="fas fa-microphone"></i>
+                    </button>
+                </div>
+                
+                <div id="recordingStatus" class="font-black text-xs tracking-widest opacity-50 uppercase mb-6">Tugmani bosing va gapiring</div>
+                
+                <div id="speakingResult" class="hidden glass-card p-8 text-left border-t-4 border-[var(--t-color)]">
+                    <p id="transcript" class="italic opacity-60 mb-6 border-b border-white/10 pb-4"></p>
+                    <div id="speakingFeedback" class="text-lg leading-relaxed"></div>
+                </div>
+            </div>
+        </section>
+
+        <div id="loader" class="hidden fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-black/60 backdrop-blur-sm">
+            <div class="w-16 h-16 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p class="theme-text font-black tracking-widest">AI TAHLIL QILMOQDA...</p>
         </div>
-    </div>
+    </main>
 
     <script src="app.js"></script>
 </body>
