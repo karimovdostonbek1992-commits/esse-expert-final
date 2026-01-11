@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Neon Pro</title>
+    <title>EssayLab AI - Neon Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
@@ -23,11 +23,9 @@
 
     <div id="authModal" class="fixed inset-0 z-[5000] flex items-center justify-center bg-[#020c1b] p-4">
         <div class="glass-card p-10 max-w-md w-full text-center border-t-4 border-[var(--t-color)]">
-            <h1 class="text-4xl font-black mb-6 theme-text italic">EssayLab AI</h1>
-            <div class="space-y-4 mb-8">
-                <input id="regEmail" type="email" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 outline-none focus:border-[var(--t-color)] transition" placeholder="Email (user@gmail.com)">
-            </div>
-            <button onclick="registerUser()" class="w-full neon-glow py-4 rounded-xl font-black text-white btn-pulse">KIRISH</button>
+            <h1 class="text-4xl font-black mb-6 theme-text italic tracking-tighter">EssayLab AI</h1>
+            <input id="regEmail" type="email" class="w-full p-4 rounded-xl bg-white/5 border border-white/10 outline-none mb-6 focus:border-[var(--t-color)] transition" placeholder="Emailingizni kiriting...">
+            <button onclick="registerUser()" class="w-full neon-glow py-4 rounded-xl font-black text-white btn-pulse uppercase tracking-widest">Kirish</button>
         </div>
     </div>
 
@@ -39,16 +37,14 @@
         </div>
 
         <div class="glass-card p-8 md:p-12 mb-12">
-            <input id="topicInput" type="text" class="w-full bg-transparent border-b border-white/10 p-4 mb-8 outline-none font-bold text-2xl text-[var(--t-color)]" placeholder="">
-            <textarea id="essayInput" class="w-full h-80 bg-transparent outline-none resize-none leading-relaxed text-xl" placeholder=""></textarea>
+            <input id="topicInput" type="text" class="w-full bg-transparent border-b border-white/10 p-4 mb-8 outline-none font-bold text-2xl text-[var(--t-color)]">
+            <textarea id="essayInput" class="w-full h-80 bg-transparent outline-none resize-none leading-relaxed text-xl" placeholder="..."></textarea>
             
             <div class="flex flex-col md:flex-row justify-between items-center mt-8 pt-8 border-t border-white/5 gap-6">
                 <div class="theme-text font-black text-sm tracking-widest italic">
                     <span id="wordCount">0</span> <span id="wordLabel"></span>
                 </div>
-                <button id="checkBtn" class="neon-glow px-16 py-5 rounded-2xl font-black text-white uppercase tracking-widest text-lg">
-                    TAHLIL QILISH
-                </button>
+                <button id="checkBtn" class="neon-glow px-16 py-5 rounded-2xl font-black text-white uppercase tracking-widest text-lg"></button>
             </div>
         </div>
 
@@ -58,8 +54,8 @@
 
         <div class="glass-card p-12 text-center border-b-4 border-[var(--t-color)]">
             <div class="flex justify-between items-center mb-10">
-                <h2 id="speakingTitle" class="text-3xl font-black theme-text italic">AI Speaking Coach</h2>
-                <button onclick="generateNewTopic()" class="text-[var(--t-color)] text-2xl hover:rotate-180 transition-all duration-500">
+                <h2 id="speakingTitle" class="text-3xl font-black theme-text italic"></h2>
+                <button onclick="setRandomTopic()" class="text-[var(--t-color)] text-2xl hover:rotate-180 transition-all duration-500">
                     <i class="fas fa-sync-alt"></i>
                 </button>
             </div>
