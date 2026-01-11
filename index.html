@@ -61,7 +61,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-8 space-y-6">
                     <div class="glass-card p-6 md:p-10">
-                        <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold outline-none">
+                        <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold outline-none" placeholder="">
                         <textarea id="essayInput" class="w-full h-80 p-6 rounded-2xl outline-none resize-none mb-6 leading-relaxed" placeholder=""></textarea>
                         <div class="flex justify-between items-center">
                             <div class="theme-text font-black text-xs"><span id="wordCount">0</span> <span id="wordLabel"></span></div>
@@ -83,8 +83,13 @@
 
         <section id="speakingPage" class="content-section hidden">
             <div class="glass-card p-10 text-center max-w-2xl mx-auto">
-                <h2 id="speakingTitle" class="text-3xl font-black mb-6 theme-text italic"></h2>
-                <p id="speakingQuestion" class="text-xl font-bold mb-10 opacity-80 italic"></p>
+                <div class="flex justify-between items-start mb-6">
+                    <h2 id="speakingTitle" class="text-3xl font-black theme-text italic"></h2>
+                    <button onclick="generateNewTopic()" class="p-2 bg-white/5 rounded-lg hover:bg-white/10 theme-text">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                </div>
+                <p id="speakingQuestion" class="text-xl font-bold mb-10 opacity-80 italic min-h-[60px] flex items-center justify-center">Mavzu yuklanmoqda...</p>
                 
                 <div class="flex flex-col items-center gap-6">
                     <div class="relative inline-block mb-4">
