@@ -1,57 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+
 :root {
     --t-color: #00ff88;
     --t-shadow: rgba(0, 255, 136, 0.4);
     --body-bg: #020c1b;
-    --text: #ffffff;
-    --card-bg: rgba(10, 25, 47, 0.7);
+    --text: #e6f1ff;
+    --card-bg: rgba(10, 25, 47, 0.75);
 }
 
 .light-mode {
     --t-color: #3b82f6;
     --t-shadow: rgba(59, 130, 246, 0.3);
     --body-bg: #f8fafc;
-    --text: #1e293b;
+    --text: #0f172a;
     --card-bg: rgba(255, 255, 255, 0.9);
 }
 
 body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
     background-color: var(--body-bg);
     color: var(--text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    transition: 0.5s ease;
-    /* Fon "yonishi" effekti */
-    background-image: radial-gradient(circle at 50% 0%, var(--t-shadow) 0%, transparent 50%);
+    transition: 0.8s ease;
+    background-image: radial-gradient(circle at 50% 0%, var(--t-shadow) 0%, transparent 60%);
     background-attachment: fixed;
+    overflow-x: hidden;
 }
 
 .theme-text { color: var(--t-color); }
 
 .nav-container {
     position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
+    top: 20px;
+    right: 20px;
+    z-index: 2000;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
 }
 
 .lang-wrapper {
     display: flex;
     gap: 4px;
     background: rgba(255,255,255,0.05);
-    padding: 4px;
-    border-radius: 14px;
+    padding: 5px;
+    border-radius: 16px;
     backdrop-filter: blur(10px);
 }
 
 .glass-nav-btn {
-    padding: 6px 12px;
+    padding: 8px 16px;
     font-size: 11px;
     font-weight: 800;
-    border-radius: 10px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
     color: var(--text);
-    opacity: 0.6;
     transition: 0.3s;
 }
 
@@ -59,22 +62,23 @@ body {
     background: var(--card-bg);
     backdrop-filter: blur(20px);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 28px;
+    border-radius: 32px;
 }
 
 .neon-glow {
     background: var(--t-color) !important;
-    box-shadow: 0 0 20px var(--t-color), 0 0 40px var(--t-shadow);
-    border: none;
-    transition: 0.3s;
+    box-shadow: 0 0 25px var(--t-color), 0 0 50px var(--t-shadow);
+    border: none !important;
 }
 
-.btn-pulse { animation: pulse 2s infinite; }
+.btn-pulse { animation: pulse 2.5s infinite; }
 @keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
-    50% { transform: scale(1.02); box-shadow: 0 0 40px var(--t-color); }
-    100% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
+    0% { transform: scale(1); filter: brightness(1); }
+    50% { transform: scale(1.03); filter: brightness(1.2); }
+    100% { transform: scale(1); filter: brightness(1); }
 }
+
+#sidebar.open { transform: translateX(0); }
 
 input, textarea {
     background: rgba(0,0,0,0.2) !important;
@@ -82,94 +86,11 @@ input, textarea {
     color: var(--text) !important;
 }
 
-@media (max-width: 768px) {
-    #mainTitle { font-size: 1.8rem; }
-    .nav-container { top: 10px; right: 10px; scale: 0.9; }
-}:root {
-    --t-color: #00ff88;
-    --t-shadow: rgba(0, 255, 136, 0.4);
-    --body-bg: #020c1b;
-    --text: #ffffff;
-    --card-bg: rgba(10, 25, 47, 0.7);
-}
-
-.light-mode {
-    --t-color: #3b82f6;
-    --t-shadow: rgba(59, 130, 246, 0.3);
-    --body-bg: #f8fafc;
-    --text: #1e293b;
-    --card-bg: rgba(255, 255, 255, 0.9);
-}
-
-body {
-    background-color: var(--body-bg);
-    color: var(--text);
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    transition: 0.5s ease;
-    /* Fon "yonishi" effekti */
-    background-image: radial-gradient(circle at 50% 0%, var(--t-shadow) 0%, transparent 50%);
-    background-attachment: fixed;
-}
-
-.theme-text { color: var(--t-color); }
-
-.nav-container {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.lang-wrapper {
-    display: flex;
-    gap: 4px;
-    background: rgba(255,255,255,0.05);
-    padding: 4px;
-    border-radius: 14px;
-    backdrop-filter: blur(10px);
-}
-
-.glass-nav-btn {
-    padding: 6px 12px;
-    font-size: 11px;
-    font-weight: 800;
-    border-radius: 10px;
-    color: var(--text);
-    opacity: 0.6;
-    transition: 0.3s;
-}
-
-.glass-card {
-    background: var(--card-bg);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 28px;
-}
-
-.neon-glow {
-    background: var(--t-color) !important;
-    box-shadow: 0 0 20px var(--t-color), 0 0 40px var(--t-shadow);
-    border: none;
-    transition: 0.3s;
-}
-
-.btn-pulse { animation: pulse 2s infinite; }
-@keyframes pulse {
-    0% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
-    50% { transform: scale(1.02); box-shadow: 0 0 40px var(--t-color); }
-    100% { transform: scale(1); box-shadow: 0 0 20px var(--t-shadow); }
-}
-
-input, textarea {
-    background: rgba(0,0,0,0.2) !important;
-    border: 1px solid rgba(255,255,255,0.1) !important;
-    color: var(--text) !important;
+#micRipple.animate-ping {
+    animation: ping 1.5s cubic-bezier(0, 0, 0.2, 1) infinite;
 }
 
 @media (max-width: 768px) {
-    #mainTitle { font-size: 1.8rem; }
-    .nav-container { top: 10px; right: 10px; scale: 0.9; }
+    .nav-container { scale: 0.85; top: 10px; right: 10px; }
+    .content-section { padding: 10px; }
 }
