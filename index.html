@@ -3,115 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Pro Edition</title>
+    <title>EssayLab AI</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* CSS-ni to'g'ridan-to'g'ri shu yerga yozamiz, shunda buzilmaydi */
+        :root { --p: #00ff88; --bg: #020c1b; --c: rgba(15, 23, 42, 0.9); }
+        body { background: var(--bg); color: white; font-family: sans-serif; margin: 0; }
+        .neon-card { background: var(--c); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; margin-bottom: 20px; }
+        .neon-btn { background: var(--p); color: black; font-weight: 900; padding: 15px 30px; border-radius: 12px; transition: 0.3s; cursor: pointer; border: none; }
+        .neon-btn:hover { box-shadow: 0 0 20px var(--p); transform: translateY(-2px); }
+        .input-dark { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; color: white; padding: 15px; outline: none; margin-bottom: 15px; }
+        .nav { position: fixed; top: 20px; right: 20px; display: flex; gap: 10px; z-index: 100; }
+        .lang-btn { background: rgba(255,255,255,0.1); color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; }
+        .active-lang { background: var(--p); color: black; font-weight: bold; }
+        .loader { position: fixed; inset: 0; background: rgba(2,12,27,0.9); z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+    </style>
 </head>
-<body class="mode-uz" id="mainBody">
+<body>
 
-    <button id="menuBtn" class="fixed top-5 left-5 z-[3000] p-3 glass-nav-btn text-xl no-print">
-        <i class="fas fa-bars"></i>
-    </button>
+    <div class="nav">
+        <button onclick="setMode('uz')" id="btnuz" class="lang-btn active-lang">UZ</button>
+        <button onclick="setMode('en')" id="btnen" class="lang-btn">EN</button>
+        <button onclick="setMode('ru')" id="btnru" class="lang-btn">RU</button>
+    </div>
 
-    <div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#020c1b] z-[2500] transform -translate-x-full transition-transform duration-300 border-r border-white/10 backdrop-blur-xl">
-        <div class="p-8 pt-24">
-            <h2 class="text-2xl font-black theme-text italic mb-10 tracking-tighter">Menu</h2>
-            <nav class="space-y-4">
-                <button onclick="switchTab('writing')" class="w-full text-left p-4 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-white">
-                    <i class="fas fa-pen-nib theme-text"></i> <span class="font-bold">Writing (Esse)</span>
-                </button>
-                <button onclick="switchTab('speaking')" class="w-full text-left p-4 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-white">
-                    <i class="fas fa-microphone theme-text"></i> <span class="font-bold">Speaking (AI Coach)</span>
-                </button>
-            </nav>
+    <div id="auth" class="fixed inset-0 bg-[#020c1b] z-[500] flex items-center justify-center p-4">
+        <div class="neon-card text-center max-w-sm w-full">
+            <h1 style="color:var(--p); font-size: 2.5rem; font-weight: 900; margin-bottom: 20px;">EssayLab AI</h1>
+            <input id="email" type="email" placeholder="Emailni kiriting" class="input-dark">
+            <button onclick="login()" class="neon-btn w-full">KIRISH</button>
         </div>
     </div>
 
-    <div class="nav-container no-print">
-        <button onclick="toggleTheme()" id="themeToggleBtn" class="glass-nav-btn">
-            <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
-        </button>
-        <div class="lang-wrapper">
-            <button onclick="setMode('uz')" id="btnUz" class="glass-nav-btn">UZ</button>
-            <button onclick="setMode('en')" id="btnEn" class="glass-nav-btn">EN</button>
-            <button onclick="setMode('ru')" id="btnRu" class="glass-nav-btn">RU</button>
+    <main id="app" class="hidden max-w-4xl mx-auto pt-28 px-4">
+        <div class="text-center mb-10">
+            <h1 id="title" class="text-4xl font-black mb-2 tracking-tighter">WRITING AI</h1>
+            <p id="user" class="text-xs opacity-50 tracking-widest"></p>
         </div>
-    </div>
 
-    <div id="authModal" class="fixed inset-0 z-[4000] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4">
-        <div class="glass-card p-10 max-w-md w-full border-t-4 border-[var(--t-color)] text-center">
-            <h1 class="text-4xl font-black mb-6 tracking-tighter theme-text">EssayLab AI</h1>
-            <div class="space-y-4 mb-8">
-                <input id="regName" type="text" class="w-full p-4 rounded-xl outline-none" placeholder="Ism va Familiya">
-                <input id="regAlias" type="text" class="w-full p-4 rounded-xl outline-none" placeholder="Username">
-                <input id="regEmail" type="email" class="w-full p-4 rounded-xl outline-none" placeholder="Email (user@gmail.com)">
+        <div class="neon-card">
+            <input id="topic" type="text" placeholder="Mavzu..." class="input-dark text-xl font-bold border-b border-white/20">
+            <textarea id="essay" placeholder="Esseingizni yozing..." class="input-dark h-80 resize-none"></textarea>
+            <div class="flex justify-between items-center">
+                <span style="color:var(--p); font-weight: bold;"><span id="words">0</span> SO'Z</span>
+                <button onclick="checkEssay()" class="neon-btn">TAHLIL QILISH</button>
             </div>
-            <button onclick="registerUser()" class="w-full neon-glow py-4 rounded-xl font-black text-white btn-pulse">KIRISH</button>
         </div>
-    </div>
 
-    <main id="mainContent" class="opacity-0 transition-opacity duration-1000 max-w-5xl mx-auto p-4 pt-24">
-        
-        <section id="writingPage" class="content-section space-y-8">
-            <div class="text-center mb-10">
-                <h1 id="mainTitle" class="text-4xl md:text-5xl font-black mb-2"></h1>
-                <p id="userTag" class="text-[10px] font-bold opacity-50 tracking-widest uppercase"></p>
-            </div>
-            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-8 space-y-6">
-                    <div class="glass-card p-6 md:p-10">
-                        <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold outline-none">
-                        <textarea id="essayInput" class="w-full h-80 p-6 rounded-2xl outline-none resize-none mb-6 leading-relaxed" placeholder=""></textarea>
-                        <div class="flex justify-between items-center">
-                            <div class="theme-text font-black text-xs"><span id="wordCount">0</span> <span id="wordLabel"></span></div>
-                            <button id="checkBtn" class="neon-glow px-12 py-4 rounded-2xl font-black text-white"></button>
-                        </div>
-                    </div>
-                    <div id="resultBox" class="hidden glass-card p-8 border-l-[10px] border-[var(--t-color)]">
-                        <div id="resultContent" class="text-lg leading-loose"></div>
-                    </div>
-                </div>
-                <div class="lg:col-span-4">
-                    <div class="glass-card p-6 sticky top-24">
-                        <h3 id="critTitle" class="text-[10px] font-black opacity-50 mb-6 tracking-widest uppercase"></h3>
-                        <div id="criteriaList" class="space-y-3"></div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <div id="res" class="hidden neon-card border-l-8 border-[#00ff88]">
+            <div id="resContent" class="text-lg leading-relaxed"></div>
+        </div>
 
-        <section id="speakingPage" class="content-section hidden">
-            <div class="glass-card p-10 text-center max-w-2xl mx-auto">
-                <h2 id="speakingTitle" class="text-3xl font-black mb-6 theme-text italic"></h2>
-                <p id="speakingQuestion" class="text-xl font-bold mb-10 opacity-80 italic"></p>
-                
-                <div class="flex flex-col items-center gap-6">
-                    <div class="relative inline-block mb-4">
-                        <div id="micRipple" class="absolute inset-0 bg-[var(--t-color)] rounded-full opacity-0"></div>
-                        <button id="startRecordBtn" onclick="startRecording()" class="relative z-10 w-28 h-28 rounded-full neon-glow flex items-center justify-center text-4xl text-white">
-                            <i class="fas fa-microphone"></i>
-                        </button>
-                        <button id="stopRecordBtn" onclick="stopRecording()" class="hidden relative z-10 w-28 h-28 rounded-full bg-red-600 flex items-center justify-center text-4xl text-white animate-pulse">
-                            <i class="fas fa-stop"></i>
-                        </button>
-                    </div>
-                    <div id="recordingStatus" class="font-black text-[10px] tracking-widest opacity-50 uppercase"></div>
-                </div>
-                
-                <div id="speakingResult" class="hidden mt-10 glass-card p-8 text-left border-t-4 border-[var(--t-color)]">
-                    <p id="transcript" class="italic opacity-60 mb-6 border-b border-white/10 pb-4"></p>
-                    <div id="speakingFeedback" class="text-lg leading-relaxed"></div>
-                </div>
-            </div>
-        </section>
-
-        <div id="loader" class="hidden fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
-            <div class="w-16 h-16 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mb-4"></div>
-            <p id="loaderText" class="theme-text font-black tracking-widest"></p>
+        <div class="neon-card text-center">
+            <h2 style="color:var(--p)" class="text-2xl font-bold mb-6 italic">Speaking Coach</h2>
+            <p id="q" class="text-xl font-bold mb-8 opacity-80 italic">Mavzu yuklanmoqda...</p>
+            <button id="mic" onclick="toggleMic()" class="w-24 h-24 rounded-full neon-btn text-3xl">
+                <i class="fas fa-microphone"></i>
+            </button>
+            <p id="status" class="mt-4 text-xs opacity-40 uppercase tracking-widest">Boshlash uchun bosing</p>
         </div>
     </main>
 
-    <script src="app.js"></script>
+    <div id="ld" class="hidden loader">
+        <div class="w-12 h-12 border-4 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p style="color:var(--p); font-weight: 900; letter-spacing: 2px;">AI TAHLIL QILMOQDA...</p>
+    </div>
+
+    <script>
+        const KEY = "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";
+        let mode = 'uz';
+        let rec = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+        rec.continuous = true;
+
+        const db = {
+            uz: ["Sun'iy intellektning foydasi", "Ekologiya va biz", "Kitobxonlikning foydasi"],
+            en: ["Impact of AI", "Climate change issues", "Benefits of reading"],
+            ru: ["Влияние ИИ", "Проблемы экологии", "Польза чтения"]
+        };
+
+        function setMode(m) {
+            mode = m;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active-lang'));
+            document.getElementById('btn' + m).classList.add('active-lang');
+            document.getElementById('q').innerText = db[m][Math.floor(Math.random() * 3)];
+        }
+
+        function login() {
+            const e = document.getElementById('email').value;
+            if(!e.includes('@')) return alert("Email xato!");
+            document.getElementById('auth').classList.add('hidden');
+            document.getElementById('app').classList.remove('hidden');
+            document.getElementById('user').innerText = e.toUpperCase();
+            setMode('uz');
+        }
+
+        async function checkEssay() {
+            const t = document.getElementById('essay').value;
+            if(t.length < 10) return;
+            document.getElementById('ld').classList.remove('hidden');
+            const r = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                method: "POST",
+                headers: { "Authorization": `Bearer ${KEY}`, "Content-Type": "application/json" },
+                body: JSON.stringify({ model: "llama-3.3-70b-versatile", messages: [{role: "user", content: `Tahlil qil (${mode}): ${t}`}]})
+            });
+            const d = await r.json();
+            document.getElementById('res').classList.remove('hidden');
+            document.getElementById('resContent').innerHTML = d.choices[0].message.content.replace(/\n/g, '<br>');
+            document.getElementById('ld').classList.add('hidden');
+        }
+
+        function toggleMic() {
+            try { rec.start(); document.getElementById('status').innerText = "AI ESHITMOQDA..."; } 
+            catch(e) { rec.stop(); document.getElementById('status').innerText = "BOSHLASH UCHUN BOSING"; }
+        }
+
+        document.getElementById('essay').oninput = function() {
+            document.getElementById('words').innerText = this.value.trim().split(/\s+/).length;
+        };
+    </script>
 </body>
 </html>
