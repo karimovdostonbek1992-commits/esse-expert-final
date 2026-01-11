@@ -2,12 +2,6 @@ const GROQ_API_KEY = "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";
 let currentMode = 'uz';
 let isLight = false;
 
-const speakingTopics = {
-    uz: ["Texnologiyalarning ta'limdagi roli haqida gapiring.", "Sizning sevimli kitobingiz va uning ahamiyati.", "Sog'lom turmush tarzi nima?", "Tabiatni asrash uchun nima qilish kerak?"],
-    en: ["Talk about the role of technology in education.", "Your favorite book and its importance.", "What is a healthy lifestyle?", "How can we protect the environment?"],
-    ru: ["Расскажите о роли технологий в образовании.", "Ваша любимая книга и ее значение.", "Что такое здоровый образ жизни?", "Как мы можем защитить природу?"]
-};
-
 const langData = {
     uz: {
         title: "Milliy sertifikat bo'limi", btn: "TAHLIL QILISH", topicPh: "Esse mavzusi...", textPh: "Matnni shu yerga yozing...",
@@ -47,6 +41,7 @@ function switchTab(tab) {
     document.getElementById(tab + 'Page').classList.remove('hidden');
     sidebar.classList.remove('open');
     menuBtn.querySelector('i').className = 'fas fa-bars';
+    if(tab === 'speaking') generateNewTopic();
 }
 
 // Auth Logic
@@ -66,7 +61,27 @@ function loadUI(user) {
     setMode('uz');
 }
 
-// Mode & Language Logic
+// AI Topic Generation
+async function generateNewTopic() {
+    const display = document.getElementById('speakingQuestion');
+    display.innerText = currentMode === 'en' ? "Generating topic..." : (currentMode === 'ru' ? "Генерация темы..." : "Mavzu yaratilmoqda...");
+    
+    try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: `Generate one unique IELTS Speaking topic for a candidate in ${currentMode === 'en' ? 'English' : (currentMode === 'ru' ? 'Russian' : 'Uzbek')}. Only return the topic sentence.` }]
+            })
+        });
+        const data = await res.json();
+        display.innerText = data.choices[0].message.content;
+    } catch (e) {
+        display.innerText = "Error loading topic.";
+    }
+}
+
 function setMode(mode) {
     currentMode = mode;
     const c = langData[mode];
@@ -76,7 +91,6 @@ function setMode(mode) {
     root.style.setProperty('--t-color', config[mode][0]);
     root.style.setProperty('--t-shadow', config[mode][1]);
 
-    // Writing Localize
     document.getElementById('mainTitle').innerText = c.title;
     document.getElementById('checkBtn').innerText = c.btn;
     document.getElementById('topicInput').placeholder = c.topicPh;
@@ -84,12 +98,8 @@ function setMode(mode) {
     document.getElementById('wordLabel').innerText = c.wordLabel;
     document.getElementById('critTitle').innerText = c.critTitle;
     document.getElementById('loaderText').innerText = c.loader;
-
-    // Speaking Localize
     document.getElementById('speakingTitle').innerText = c.speakingTitle;
     document.getElementById('recordingStatus').innerText = c.statusIdle;
-    const randomTopic = speakingTopics[mode][Math.floor(Math.random() * speakingTopics[mode].length)];
-    document.getElementById('speakingQuestion').innerText = randomTopic;
 
     document.getElementById('criteriaList').innerHTML = c.crit.map(i => `<div class="p-3 bg-white/5 rounded-xl border border-white/5 text-[9px] font-bold theme-text uppercase tracking-widest">${i}</div>`).join('');
     
@@ -99,7 +109,7 @@ function setMode(mode) {
     });
 }
 
-// Speaking Logic
+// Speaking Control
 let recognition;
 if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
@@ -137,7 +147,7 @@ async function analyzeSpeaking(text) {
             headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "llama-3.3-70b-versatile",
-                messages: [{ role: "system", content: langData[currentMode].prompt + " Analyze this speaking transcript." }, { role: "user", content: text }]
+                messages: [{ role: "system", content: langData[currentMode].prompt + " Analyze this speaking response." }, { role: "user", content: text }]
             })
         });
         const data = await res.json();
@@ -151,7 +161,6 @@ document.getElementById('checkBtn').onclick = async () => {
     const topic = document.getElementById('topicInput').value;
     const text = document.getElementById('essayInput').value;
     if(!topic || text.length < 50) return alert("Mavzu va matnni to'ldiring!");
-
     document.getElementById('loader').classList.remove('hidden');
     try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -159,27 +168,4 @@ document.getElementById('checkBtn').onclick = async () => {
             headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "llama-3.3-70b-versatile",
-                messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Mavzu: ${topic}\nEsse: ${text}` }]
-            })
-        });
-        const data = await res.json();
-        document.getElementById('resultContent').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, `<b class="theme-text">$1</b>`);
-        document.getElementById('resultBox').classList.remove('hidden');
-    } finally { document.getElementById('loader').classList.add('hidden'); }
-};
-
-function toggleTheme() {
-    isLight = !isLight;
-    document.body.classList.toggle('light-mode');
-    document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
-    setMode(currentMode);
-}
-
-window.onload = () => {
-    const saved = localStorage.getItem('essayLabUser');
-    if (saved) loadUI(JSON.parse(saved));
-};
-
-document.getElementById('essayInput').oninput = function() {
-    document.getElementById('wordCount').innerText = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
-};
+                messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Mavzu
