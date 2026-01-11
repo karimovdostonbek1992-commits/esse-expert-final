@@ -11,7 +11,7 @@
 .light-mode {
     --t-color: #2563eb;
     --t-shadow: rgba(37, 99, 235, 0.2);
-    --body-bg: #f1f5f9;
+    --body-bg: #f8fafc;
     --text: #0f172a;
     --card-bg: rgba(255, 255, 255, 0.9);
 }
@@ -21,50 +21,29 @@ body {
     background-color: var(--body-bg);
     color: var(--text);
     transition: 0.5s ease;
-    background-image: radial-gradient(circle at top right, var(--t-shadow), transparent 600px);
+    background-image: radial-gradient(circle at top right, var(--t-shadow), transparent 700px);
     background-attachment: fixed;
 }
 
 .theme-text { color: var(--t-color); }
 
-.nav-container {
-    position: fixed; top: 20px; right: 20px;
-    display: flex; gap: 15px; z-index: 4000;
-}
+.nav-container { position: fixed; top: 20px; right: 20px; display: flex; gap: 15px; z-index: 4000; }
 
-.lang-wrapper {
-    display: flex; gap: 5px; background: rgba(0,0,0,0.3);
-    padding: 6px; border-radius: 16px; backdrop-filter: blur(10px);
-}
+.lang-wrapper { display: flex; gap: 5px; background: rgba(0,0,0,0.3); padding: 6px; border-radius: 16px; backdrop-filter: blur(10px); }
 
 .glass-nav-btn {
     padding: 10px 18px; border-radius: 12px; background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1); font-weight: 800; font-size: 12px; transition: 0.3s;
+    border: 1px solid rgba(255,255,255,0.1); font-weight: 800; font-size: 11px; transition: 0.3s;
 }
 
-.glass-card {
-    background: var(--card-bg); backdrop-filter: blur(30px);
-    border: 1px solid rgba(255,255,255,0.08); border-radius: 40px;
-}
+.glass-card { background: var(--card-bg); backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); border-radius: 40px; }
 
 .neon-glow {
     background: var(--t-color) !important; color: #000 !important;
     box-shadow: 0 15px 40px var(--t-shadow); border: none !important;
-    transition: 0.4s;
-}
-.neon-glow:hover { transform: translateY(-3px); filter: brightness(1.2); }
-
-.btn-pulse { animation: pulse 2s infinite; }
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.02); }
-    100% { transform: scale(1); }
 }
 
 #micRipple.animate-ping { animation: ping 1.5s infinite; }
 
-@keyframes slide-up {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-}
+@keyframes slide-up { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
 .animate-slide-up { animation: slide-up 0.6s ease-out forwards; }
