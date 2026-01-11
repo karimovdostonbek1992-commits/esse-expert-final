@@ -168,4 +168,27 @@ document.getElementById('checkBtn').onclick = async () => {
             headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "llama-3.3-70b-versatile",
-                messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Mavzu
+                messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Mavzu: ${topic}\nEsse: ${text}` }]
+            })
+        });
+        const data = await res.json();
+        document.getElementById('resultContent').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, `<b class="theme-text">$1</b>`);
+        document.getElementById('resultBox').classList.remove('hidden');
+    } finally { document.getElementById('loader').classList.add('hidden'); }
+};
+
+function toggleTheme() {
+    isLight = !isLight;
+    document.body.classList.toggle('light-mode');
+    document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
+    setMode(currentMode);
+}
+
+window.onload = () => {
+    const saved = localStorage.getItem('essayLabUser');
+    if (saved) loadUI(JSON.parse(saved));
+};
+
+document.getElementById('essayInput').oninput = function() {
+    document.getElementById('wordCount').innerText = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+};
