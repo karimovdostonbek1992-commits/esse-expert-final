@@ -3,12 +3,37 @@ let currentMode = 'uz';
 let isLight = false;
 
 const langData = {
-    uz: { title: "Milliy sertifikat bo'limi", btn: "TAHLIL QILISH", res: "Ekspert Xulosasi", crit: ["Mavzu (4 ball)", "Mantiq (3 ball)", "Imlo (3 ball)", "Tinish (2 ball)", "Uslub (3 ball)"], prompt: "O'zbek tili eksperti sifatida 15 ballik tizimda tahlil qil." },
-    en: { title: "IELTS Exam Center", btn: "ANALYZE ESSAY", res: "Examiner Report", crit: ["Task Response (9.0)", "Coherence (9.0)", "Lexical (9.0)", "Grammar (9.0)"], prompt: "IELTS Examiner mode. Grade out of 9.0 band score." },
-    ru: { title: "Национальный сертификат (RU)", btn: "НАЧАТЬ АНАЛИЗ", res: "Отчет эксперта", crit: ["Содержание (3)", "Логика (2)", "Грамматика (3)", "Стиль (2)"], prompt: "Эксперт по русскому языку. Оцени по 10-балльной шкале." }
+    uz: { title: "Milliy sertifikat bo'limi", btn: "TAHLIL QILISH", crit: ["Mavzu (4 ball)", "Mantiq (3 ball)", "Imlo (3 ball)", "Tinish (2 ball)", "Uslub (3 ball)"], prompt: "O'zbek tili eksperti sifatida 15 ballik tizimda tahlil qil." },
+    en: { title: "IELTS Exam Center", btn: "ANALYZE ESSAY", crit: ["Task Response (9.0)", "Coherence (9.0)", "Lexical (9.0)", "Grammar (9.0)"], prompt: "IELTS Examiner mode. Grade out of 9.0 band score." },
+    ru: { title: "Национальный сертификат (RU)", btn: "НАЧАТЬ АНАЛИЗ", crit: ["Содержание (3)", "Логика (2)", "Грамматика (3)", "Стиль (2)"], prompt: "Эксперт по русскому языку. Оцени по 10-балльной шкале." }
 };
 
-// 1. REGISTRATSIYA VA EMAIL TEKSHIRUV
+// --- SIDEBAR & NAVIGATION ---
+const menuBtn = document.getElementById('menuBtn');
+const sidebar = document.getElementById('sidebar');
+
+menuBtn.onclick = (e) => {
+    e.stopPropagation();
+    sidebar.classList.toggle('open');
+    menuBtn.querySelector('i').classList.toggle('fa-bars');
+    menuBtn.querySelector('i').classList.toggle('fa-times');
+};
+
+document.onclick = (e) => {
+    if (!sidebar.contains(e.target) && !menuBtn.contains(e.target)) {
+        sidebar.classList.remove('open');
+        menuBtn.querySelector('i').className = 'fas fa-bars';
+    }
+};
+
+function switchTab(tab) {
+    document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
+    document.getElementById(tab + 'Page').classList.remove('hidden');
+    sidebar.classList.remove('open');
+    menuBtn.querySelector('i').className = 'fas fa-bars';
+}
+
+// --- AUTH & REGISTRATION ---
 function registerUser() {
     const name = document.getElementById('regName').value.trim();
     const alias = document.getElementById('regAlias').value.trim();
@@ -36,13 +61,10 @@ function loadUI(user) {
     setMode('uz');
 }
 
-// 2. TILNI ALMASHTIRISH (EN/RU ISHLAYDI)
+// --- LANGUAGE & THEME ---
 function setMode(mode) {
     currentMode = mode;
     const c = langData[mode];
-    document.body.className = (isLight ? 'light-mode ' : '') + `mode-${mode}`;
-    
-    // Neon ranglarni o'zgartirish
     const root = document.documentElement;
     const config = {
         uz: ['#00ff88', 'rgba(0, 255, 136, 0.4)'],
@@ -54,29 +76,27 @@ function setMode(mode) {
 
     document.getElementById('mainTitle').innerText = c.title;
     document.getElementById('checkBtn').innerText = c.btn;
+    document.getElementById('criteriaList').innerHTML = c.crit.map(i => `<div class="p-3 bg-white/5 rounded-xl border border-white/5 text-[9px] font-bold theme-text uppercase tracking-widest">${i}</div>`).join('');
 
-    // Mezonlarni yangilash
-    document.getElementById('criteriaList').innerHTML = c.crit.map(i => `
-        <div class="p-3 bg-white/5 rounded-xl border border-white/5 text-[9px] font-bold theme-text uppercase tracking-widest">${i}</div>
-    `).join('');
-
-    // Tugmalar klassini yangilash
     ['uz', 'en', 'ru'].forEach(m => {
         const btn = document.getElementById('btn' + m.charAt(0).toUpperCase() + m.slice(1));
-        if (m === mode) { btn.classList.add('neon-glow'); btn.style.opacity = "1"; }
-        else { btn.classList.remove('neon-glow'); btn.style.opacity = "0.6"; }
+        if (m === mode) btn.classList.add('neon-glow'); else btn.classList.remove('neon-glow');
     });
 }
 
-// 3. TAHLIL (AI)
+function toggleTheme() {
+    isLight = !isLight;
+    document.body.classList.toggle('light-mode');
+    document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
+}
+
+// --- WRITING (AI) ---
 document.getElementById('checkBtn').onclick = async () => {
     const topic = document.getElementById('topicInput').value;
     const text = document.getElementById('essayInput').value;
     if(!topic || text.length < 50) return alert("Mavzu va matnni to'ldiring!");
 
     document.getElementById('loader').classList.remove('hidden');
-    document.getElementById('resultBox').classList.add('hidden');
-
     try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
@@ -93,15 +113,42 @@ document.getElementById('checkBtn').onclick = async () => {
     finally { document.getElementById('loader').classList.add('hidden'); }
 };
 
-// 4. THEME TOGGLE
-function toggleTheme() {
-    isLight = !isLight;
-    document.body.classList.toggle('light-mode');
-    document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
-    setMode(currentMode);
+// --- SPEAKING (AI) ---
+let recognition;
+if ('webkitSpeechRecognition' in window) {
+    recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.onstart = () => {
+        document.getElementById('recordingStatus').innerText = "AI eshitmoqda...";
+        document.getElementById('micRipple').classList.add('animate-ping', 'opacity-50');
+    };
+    recognition.onresult = async (event) => {
+        const text = event.results[0][0].transcript;
+        document.getElementById('transcript').innerText = `"${text}"`;
+        document.getElementById('micRipple').classList.remove('animate-ping', 'opacity-50');
+        analyzeSpeaking(text);
+    };
 }
 
-// 5. WINDOW LOAD
+document.getElementById('recordBtn').onclick = () => recognition.start();
+
+async function analyzeSpeaking(text) {
+    document.getElementById('loader').classList.remove('hidden');
+    try {
+        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+            method: "POST",
+            headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "llama-3.3-70b-versatile",
+                messages: [{ role: "user", content: `Act as an IELTS Examiner. Grade this speaking response: ${text}` }]
+            })
+        });
+        const data = await res.json();
+        document.getElementById('speakingResult').classList.remove('hidden');
+        document.getElementById('speakingFeedback').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
+    } finally { document.getElementById('loader').classList.add('hidden'); }
+}
+
 window.onload = () => {
     const saved = localStorage.getItem('essayLabUser');
     if (saved) loadUI(JSON.parse(saved));
