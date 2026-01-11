@@ -3,73 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI Pro</title>
+    <title>EssayLab AI - Pro Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="mode-uz">
+<body class="mode-uz" id="mainBody">
 
-    <div class="nav-container">
-        <button id="menuBtn" class="glass-nav-btn text-xl"><i class="fas fa-bars"></i></button>
-        <div class="flex gap-2">
-            <button onclick="toggleTheme()" class="glass-nav-btn"><i id="themeIcon" class="fas fa-moon text-yellow-400"></i></button>
-            <div class="lang-wrapper">
-                <button onclick="setMode('uz')" id="btnUz" class="glass-nav-btn">UZ</button>
-                <button onclick="setMode('en')" id="btnEn" class="glass-nav-btn">EN</button>
-                <button onclick="setMode('ru')" id="btnRu" class="glass-nav-btn">RU</button>
-            </div>
-        </div>
-    </div>
+    <button id="menuBtn" class="fixed top-5 left-5 z-[3000] p-3 glass-nav-btn text-xl no-print">
+        <i class="fas fa-bars"></i>
+    </button>
 
-    <div id="sidebar" class="sidebar">
+    <div id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-[#020c1b] z-[2500] transform -translate-x-full transition-transform duration-300 border-r border-white/10 backdrop-blur-xl">
         <div class="p-8 pt-24">
-            <h2 class="text-2xl font-black theme-text mb-10 italic">Menu</h2>
-            <nav class="flex flex-col gap-4">
-                <button onclick="switchTab('writing')" class="menu-item"><i class="fas fa-pen-nib"></i> Writing</button>
-                <button onclick="switchTab('speaking')" class="menu-item"><i class="fas fa-microphone"></i> Speaking</button>
+            <h2 class="text-2xl font-black theme-text italic mb-10 tracking-tighter">Menu</h2>
+            <nav class="space-y-4">
+                <button onclick="switchTab('writing')" class="w-full text-left p-4 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-white">
+                    <i class="fas fa-pen-nib theme-text"></i> <span class="font-bold">Writing (Esse)</span>
+                </button>
+                <button onclick="switchTab('speaking')" class="w-full text-left p-4 rounded-xl hover:bg-white/5 transition flex items-center gap-4 text-white">
+                    <i class="fas fa-microphone theme-text"></i> <span class="font-bold">Speaking (AI Coach)</span>
+                </button>
             </nav>
         </div>
     </div>
 
-    <div id="authModal" class="fixed inset-0 z-[4000] flex items-center justify-center bg-[#020c1b] p-4">
-        <div class="glass-card p-10 max-w-md w-full text-center border-t-4 border-[var(--t-color)]">
-            <h1 class="text-4xl font-black mb-6 theme-text tracking-tighter italic">EssayLab AI</h1>
+    <div class="nav-container no-print">
+        <button onclick="toggleTheme()" id="themeToggleBtn" class="glass-nav-btn">
+            <i id="themeIcon" class="fas fa-moon text-yellow-400"></i>
+        </button>
+        <div class="lang-wrapper">
+            <button onclick="setMode('uz')" id="btnUz" class="glass-nav-btn">UZ</button>
+            <button onclick="setMode('en')" id="btnEn" class="glass-nav-btn">EN</button>
+            <button onclick="setMode('ru')" id="btnRu" class="glass-nav-btn">RU</button>
+        </div>
+    </div>
+
+    <div id="authModal" class="fixed inset-0 z-[4000] flex items-center justify-center bg-black/95 backdrop-blur-2xl p-4">
+        <div class="glass-card p-10 max-w-md w-full border-t-4 border-[var(--t-color)] text-center">
+            <h1 class="text-4xl font-black mb-6 tracking-tighter theme-text">EssayLab AI</h1>
             <div class="space-y-4 mb-8">
-                <input id="regName" type="text" class="auth-input" placeholder="Ism va Familiya">
-                <input id="regAlias" type="text" class="auth-input" placeholder="Username">
-                <input id="regEmail" type="email" class="auth-input" placeholder="Email">
+                <input id="regName" type="text" class="w-full p-4 rounded-xl outline-none" placeholder="Ism va Familiya">
+                <input id="regAlias" type="text" class="w-full p-4 rounded-xl outline-none" placeholder="Username">
+                <input id="regEmail" type="email" class="w-full p-4 rounded-xl outline-none" placeholder="Email (user@gmail.com)">
             </div>
             <button onclick="registerUser()" class="w-full neon-glow py-4 rounded-xl font-black text-white btn-pulse">KIRISH</button>
         </div>
     </div>
 
-    <main id="mainContent" class="opacity-0 transition-opacity duration-1000 max-w-6xl mx-auto p-4 pt-28">
+    <main id="mainContent" class="opacity-0 transition-opacity duration-1000 max-w-5xl mx-auto p-4 pt-24">
         
-        <section id="writingPage" class="content-section">
-            <div class="text-center mb-12">
-                <h1 id="mainTitle" class="text-5xl font-black mb-2 tracking-tight"></h1>
-                <p id="userTag" class="text-[10px] font-bold opacity-40 tracking-[0.3em] uppercase"></p>
+        <section id="writingPage" class="content-section space-y-8">
+            <div class="text-center mb-10">
+                <h1 id="mainTitle" class="text-4xl md:text-5xl font-black mb-2"></h1>
+                <p id="userTag" class="text-[10px] font-bold opacity-50 tracking-widest uppercase"></p>
             </div>
-            
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
                 <div class="lg:col-span-8 space-y-6">
-                    <div class="glass-card p-8">
-                        <input id="topicInput" type="text" class="w-full bg-transparent border-b border-white/10 p-4 mb-6 outline-none font-bold text-xl" placeholder="">
-                        <textarea id="essayInput" class="w-full h-96 bg-transparent outline-none resize-none leading-relaxed text-lg" placeholder=""></textarea>
-                        <div class="flex justify-between items-center mt-6 pt-6 border-t border-white/5">
-                            <div class="theme-text font-black text-xs tracking-widest"><span id="wordCount">0</span> <span id="wordLabel"></span></div>
-                            <button id="checkBtn" class="neon-glow px-12 py-4 rounded-2xl font-black text-white uppercase tracking-widest"></button>
+                    <div class="glass-card p-6 md:p-10">
+                        <input id="topicInput" type="text" class="w-full p-4 rounded-xl mb-4 font-bold outline-none">
+                        <textarea id="essayInput" class="w-full h-80 p-6 rounded-2xl outline-none resize-none mb-6 leading-relaxed" placeholder=""></textarea>
+                        <div class="flex justify-between items-center">
+                            <div class="theme-text font-black text-xs"><span id="wordCount">0</span> <span id="wordLabel"></span></div>
+                            <button id="checkBtn" class="neon-glow px-12 py-4 rounded-2xl font-black text-white"></button>
                         </div>
                     </div>
-                    <div id="resultBox" class="hidden glass-card p-8 border-l-[12px] border-[var(--t-color)] animate-fade-in">
-                        <div id="resultContent" class="text-lg leading-loose opacity-90"></div>
+                    <div id="resultBox" class="hidden glass-card p-8 border-l-[10px] border-[var(--t-color)]">
+                        <div id="resultContent" class="text-lg leading-loose"></div>
                     </div>
                 </div>
-                
                 <div class="lg:col-span-4">
-                    <div class="glass-card p-6 sticky top-28">
-                        <h3 id="critTitle" class="text-[10px] font-black opacity-40 mb-6 tracking-[0.2em] uppercase"></h3>
+                    <div class="glass-card p-6 sticky top-24">
+                        <h3 id="critTitle" class="text-[10px] font-black opacity-50 mb-6 tracking-widest uppercase"></h3>
                         <div id="criteriaList" class="space-y-3"></div>
                     </div>
                 </div>
@@ -77,37 +82,35 @@
         </section>
 
         <section id="speakingPage" class="content-section hidden">
-            <div class="glass-card p-12 text-center max-w-2xl mx-auto">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 id="speakingTitle" class="text-3xl font-black theme-text italic"></h2>
-                    <button onclick="generateNewTopic()" class="hover:rotate-180 transition-transform duration-500 theme-text text-xl"><i class="fas fa-sync-alt"></i></button>
-                </div>
-                <p id="speakingQuestion" class="text-2xl font-bold mb-12 opacity-80 leading-snug"></p>
+            <div class="glass-card p-10 text-center max-w-2xl mx-auto">
+                <h2 id="speakingTitle" class="text-3xl font-black mb-6 theme-text italic"></h2>
+                <p id="speakingQuestion" class="text-xl font-bold mb-10 opacity-80 italic"></p>
                 
-                <div class="relative inline-block mb-10">
-                    <div id="micRipple" class="absolute inset-0 bg-[var(--t-color)] rounded-full opacity-0"></div>
-                    <button id="startRecordBtn" onclick="startRecording()" class="relative z-10 w-32 h-32 rounded-full neon-glow flex items-center justify-center text-4xl text-white">
-                        <i class="fas fa-microphone"></i>
-                    </button>
-                    <button id="stopRecordBtn" onclick="stopRecording()" class="hidden relative z-10 w-32 h-32 rounded-full bg-red-600 flex items-center justify-center text-4xl text-white shadow-[0_0_30px_rgba(220,38,38,0.5)]">
-                        <i class="fas fa-stop"></i>
-                    </button>
+                <div class="flex flex-col items-center gap-6">
+                    <div class="relative inline-block mb-4">
+                        <div id="micRipple" class="absolute inset-0 bg-[var(--t-color)] rounded-full opacity-0"></div>
+                        <button id="startRecordBtn" onclick="startRecording()" class="relative z-10 w-28 h-28 rounded-full neon-glow flex items-center justify-center text-4xl text-white">
+                            <i class="fas fa-microphone"></i>
+                        </button>
+                        <button id="stopRecordBtn" onclick="stopRecording()" class="hidden relative z-10 w-28 h-28 rounded-full bg-red-600 flex items-center justify-center text-4xl text-white animate-pulse">
+                            <i class="fas fa-stop"></i>
+                        </button>
+                    </div>
+                    <div id="recordingStatus" class="font-black text-[10px] tracking-widest opacity-50 uppercase"></div>
                 </div>
-                <div id="recordingStatus" class="font-black text-xs tracking-widest opacity-40 uppercase"></div>
                 
-                <div id="speakingResult" class="hidden mt-12 text-left border-t border-white/10 pt-8">
-                    <p id="transcript" class="italic opacity-50 mb-6 text-sm"></p>
+                <div id="speakingResult" class="hidden mt-10 glass-card p-8 text-left border-t-4 border-[var(--t-color)]">
+                    <p id="transcript" class="italic opacity-60 mb-6 border-b border-white/10 pb-4"></p>
                     <div id="speakingFeedback" class="text-lg leading-relaxed"></div>
                 </div>
             </div>
         </section>
 
+        <div id="loader" class="hidden fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-black/70 backdrop-blur-sm">
+            <div class="w-16 h-16 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mb-4"></div>
+            <p id="loaderText" class="theme-text font-black tracking-widest"></p>
+        </div>
     </main>
-
-    <div id="loader" class="hidden fixed inset-0 z-[5000] flex flex-col items-center justify-center bg-[#020c1b]/90 backdrop-blur-md">
-        <div class="w-12 h-12 border-4 border-[var(--t-color)] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p id="loaderText" class="theme-text font-black tracking-[0.4em] text-xs"></p>
-    </div>
 
     <script src="app.js"></script>
 </body>
