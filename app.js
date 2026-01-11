@@ -3,127 +3,83 @@ let currentMode = 'uz';
 let isLight = false;
 
 const langData = {
-    uz: {
-        title: "Milliy sertifikat bo'limi", btn: "TAHLIL QILISH", topicPh: "Esse mavzusi...", textPh: "Matnni shu yerga yozing...",
-        wordLabel: "SO'Z", critTitle: "Baholash Mezonlari", speakingTitle: "AI Nutq Murabbiyi", statusIdle: "Tugmani bosing va gapiring", 
-        statusRec: "AI eshitmoqda...", loader: "AI TAHLIL QILMOQDA...",
-        crit: ["Mavzu (4 ball)", "Mantiq (3 ball)", "Imlo (3 ball)", "Tinish (2 ball)", "Uslub (3 ball)"],
-        prompt: "O'zbek tili eksperti sifatida 15 ballik tizimda tahlil qil."
-    },
-    en: {
-        title: "IELTS Exam Center", btn: "ANALYZE ESSAY", topicPh: "Essay topic...", textPh: "Write your essay here...",
-        wordLabel: "WORDS", critTitle: "Assessment Criteria", speakingTitle: "AI Speaking Coach", statusIdle: "Press mic and speak",
-        statusRec: "AI is listening...", loader: "AI ANALYZING...",
-        crit: ["Task Response (9.0)", "Coherence (9.0)", "Lexical (9.0)", "Grammar (9.0)"],
-        prompt: "Act as an IELTS Examiner. Grade out of 9.0 band score."
-    },
-    ru: {
-        title: "Национальный сертификат", btn: "НАЧАТЬ АНАЛИЗ", topicPh: "Тема эссе...", textPh: "Напишите ваше эссе здесь...",
-        wordLabel: "СЛОВ", critTitle: "Критерии оценки", speakingTitle: "AI Тренер по речи", statusIdle: "Нажмите и говорите",
-        statusRec: "AI слушает...", loader: "AI АНАЛИЗИРУЕТ...",
-        crit: ["Содержание (3)", "Логика (2)", "Грамматика (3)", "Стиль (2)"],
-        prompt: "Оцени как эксперт по русскому языку по 10-бальной шкале."
-    }
+    uz: { title: "Writing Pro", btn: "TAHLIL", topicPh: "Esse mavzusi...", textPh: "Matnni yozing...", wordLabel: "SO'Z", critTitle: "Mezonlar", speakingTitle: "AI Coach", statusIdle: "Boshlash uchun bosing", statusRec: "AI eshitmoqda...", loader: "TAHLIL QILINMOQDA...", prompt: "O'zbek tili eksperti sifatida tahlil qil." },
+    en: { title: "IELTS Pro", btn: "ANALYZE", topicPh: "Essay topic...", textPh: "Type essay here...", wordLabel: "WORDS", critTitle: "Criteria", speakingTitle: "AI Coach", statusIdle: "Press to start", statusRec: "AI listening...", loader: "ANALYZING...", prompt: "Act as an IELTS Examiner." },
+    ru: { title: "Sertifikat RU", btn: "АНАЛИЗ", topicPh: "Тема эссе...", textPh: "Пишите здесь...", wordLabel: "СЛОВ", critTitle: "Критерии", speakingTitle: "AI Coach", statusIdle: "Нажмите для старта", statusRec: "AI слушает...", loader: "АНАЛИЗ...", prompt: "Оцени как эксперт русского языка." }
 };
 
-// Sidebar Logic
-const menuBtn = document.getElementById('menuBtn');
-const sidebar = document.getElementById('sidebar');
-menuBtn.onclick = (e) => {
+// Menu Control
+document.getElementById('menuBtn').onclick = (e) => {
     e.stopPropagation();
-    sidebar.classList.toggle('open');
-    menuBtn.querySelector('i').classList.toggle('fa-bars');
-    menuBtn.querySelector('i').classList.toggle('fa-times');
+    document.getElementById('sidebar').classList.toggle('open');
 };
+document.onclick = () => document.getElementById('sidebar').classList.remove('open');
 
 function switchTab(tab) {
     document.querySelectorAll('.content-section').forEach(s => s.classList.add('hidden'));
     document.getElementById(tab + 'Page').classList.remove('hidden');
-    sidebar.classList.remove('open');
-    menuBtn.querySelector('i').className = 'fas fa-bars';
-    if(tab === 'speaking') generateNewTopic();
 }
 
 // Auth Logic
 function registerUser() {
-    const email = document.getElementById('regEmail').value.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return alert("Haqiqiy email kiriting!");
-    
-    const userData = { name: document.getElementById('regName').value, alias: document.getElementById('regAlias').value, email };
-    localStorage.setItem('essayLabUser', JSON.stringify(userData));
-    loadUI(userData);
+    const email = document.getElementById('regEmail').value;
+    if(!email.includes('@')) return alert("Email xato!");
+    const user = { alias: document.getElementById('regAlias').value, email };
+    localStorage.setItem('essayLabUser', JSON.stringify(user));
+    loadUI(user);
 }
 
 function loadUI(user) {
-    document.getElementById('authModal').classList.add('hidden');
-    document.getElementById('mainContent').classList.replace('opacity-0', 'opacity-100');
-    document.getElementById('userTag').innerText = `@${user.alias} | ${user.email}`;
+    document.getElementById('authModal').style.display = 'none';
+    document.getElementById('mainContent').style.opacity = '1';
+    document.getElementById('userTag').innerText = `@${user.alias}`;
     setMode('uz');
 }
 
-// AI Topic Generation
 async function generateNewTopic() {
     const display = document.getElementById('speakingQuestion');
-    display.innerText = currentMode === 'en' ? "Generating topic..." : (currentMode === 'ru' ? "Генерация темы..." : "Mavzu yaratilmoqda...");
-    
+    display.innerText = "...";
     try {
         const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
             method: "POST",
             headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
             body: JSON.stringify({
                 model: "llama-3.3-70b-versatile",
-                messages: [{ role: "user", content: `Generate one unique IELTS Speaking topic for a candidate in ${currentMode === 'en' ? 'English' : (currentMode === 'ru' ? 'Russian' : 'Uzbek')}. Only return the topic sentence.` }]
+                messages: [{ role: "user", content: `New IELTS Speaking topic in ${currentMode}. Just the topic sentence.` }]
             })
         });
         const data = await res.json();
         display.innerText = data.choices[0].message.content;
-    } catch (e) {
-        display.innerText = "Error loading topic.";
-    }
+    } catch(e) { display.innerText = "Error loading topic."; }
 }
 
 function setMode(mode) {
     currentMode = mode;
     const c = langData[mode];
-    const root = document.documentElement;
-    const config = { uz: ['#00ff88', 'rgba(0, 255, 136, 0.4)'], en: ['#00d2ff', 'rgba(0, 210, 255, 0.4)'], ru: ['#ff3366', 'rgba(255, 51, 102, 0.4)'] };
-    
-    root.style.setProperty('--t-color', config[mode][0]);
-    root.style.setProperty('--t-shadow', config[mode][1]);
-
     document.getElementById('mainTitle').innerText = c.title;
     document.getElementById('checkBtn').innerText = c.btn;
     document.getElementById('topicInput').placeholder = c.topicPh;
     document.getElementById('essayInput').placeholder = c.textPh;
     document.getElementById('wordLabel').innerText = c.wordLabel;
     document.getElementById('critTitle').innerText = c.critTitle;
-    document.getElementById('loaderText').innerText = c.loader;
     document.getElementById('speakingTitle').innerText = c.speakingTitle;
     document.getElementById('recordingStatus').innerText = c.statusIdle;
-
-    document.getElementById('criteriaList').innerHTML = c.crit.map(i => `<div class="p-3 bg-white/5 rounded-xl border border-white/5 text-[9px] font-bold theme-text uppercase tracking-widest">${i}</div>`).join('');
-    
-    ['uz', 'en', 'ru'].forEach(m => {
-        const btn = document.getElementById('btn' + m.charAt(0).toUpperCase() + m.slice(1));
-        if (m === mode) btn.classList.add('neon-glow'); else btn.classList.remove('neon-glow');
-    });
+    document.getElementById('loaderText').innerText = c.loader;
+    generateNewTopic();
 }
 
-// Speaking Control
-let recognition;
-if ('webkitSpeechRecognition' in window) {
-    recognition = new webkitSpeechRecognition();
-    recognition.continuous = true;
-    recognition.onstart = () => {
-        document.getElementById('recordingStatus').innerText = langData[currentMode].statusRec;
-        document.getElementById('micRipple').classList.add('animate-ping', 'opacity-50');
-    };
-    recognition.onresult = (event) => {
-        const text = event.results[event.results.length - 1][0].transcript;
-        document.getElementById('transcript').innerText = `"${text}"`;
-        analyzeSpeaking(text);
-    };
-}
+// Speaking Logic
+let recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
+recognition.continuous = true;
+recognition.onstart = () => {
+    document.getElementById('micRipple').classList.add('animate-ping', 'opacity-50');
+    document.getElementById('recordingStatus').innerText = langData[currentMode].statusRec;
+};
+recognition.onresult = (e) => {
+    const text = e.results[e.results.length - 1][0].transcript;
+    document.getElementById('transcript').innerText = text;
+    analyzeSpeaking(text);
+};
 
 function startRecording() {
     recognition.lang = currentMode === 'en' ? 'en-US' : (currentMode === 'ru' ? 'ru-RU' : 'uz-UZ');
@@ -141,54 +97,46 @@ function stopRecording() {
 
 async function analyzeSpeaking(text) {
     document.getElementById('loader').classList.remove('hidden');
-    try {
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-                model: "llama-3.3-70b-versatile",
-                messages: [{ role: "system", content: langData[currentMode].prompt + " Analyze this speaking response." }, { role: "user", content: text }]
-            })
-        });
-        const data = await res.json();
-        document.getElementById('speakingResult').classList.remove('hidden');
-        document.getElementById('speakingFeedback').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, `<b class="theme-text">$1</b>`);
-    } finally { document.getElementById('loader').classList.add('hidden'); }
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "user", content: `Grade this speech: ${text}` }]
+        })
+    });
+    const data = await res.json();
+    document.getElementById('speakingResult').classList.remove('hidden');
+    document.getElementById('speakingFeedback').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
+    document.getElementById('loader').classList.add('hidden');
 }
 
-// Essay Logic
+// Writing Logic
 document.getElementById('checkBtn').onclick = async () => {
-    const topic = document.getElementById('topicInput').value;
     const text = document.getElementById('essayInput').value;
-    if(!topic || text.length < 50) return alert("Mavzu va matnni to'ldiring!");
+    if(text.length < 10) return;
     document.getElementById('loader').classList.remove('hidden');
-    try {
-        const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-            method: "POST",
-            headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-                model: "llama-3.3-70b-versatile",
-                messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: `Mavzu: ${topic}\nEsse: ${text}` }]
-            })
-        });
-        const data = await res.json();
-        document.getElementById('resultContent').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, `<b class="theme-text">$1</b>`);
-        document.getElementById('resultBox').classList.remove('hidden');
-    } finally { document.getElementById('loader').classList.add('hidden'); }
+    const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+        method: "POST",
+        headers: { "Authorization": `Bearer ${GROQ_API_KEY}`, "Content-Type": "application/json" },
+        body: JSON.stringify({
+            model: "llama-3.3-70b-versatile",
+            messages: [{ role: "system", content: langData[currentMode].prompt }, { role: "user", content: text }]
+        })
+    });
+    const data = await res.json();
+    document.getElementById('resultBox').classList.remove('hidden');
+    document.getElementById('resultContent').innerHTML = data.choices[0].message.content.replace(/\n/g, '<br>');
+    document.getElementById('loader').classList.add('hidden');
 };
 
 function toggleTheme() {
     isLight = !isLight;
     document.body.classList.toggle('light-mode');
     document.getElementById('themeIcon').className = isLight ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
-    setMode(currentMode);
 }
 
 window.onload = () => {
     const saved = localStorage.getItem('essayLabUser');
-    if (saved) loadUI(JSON.parse(saved));
-};
-
-document.getElementById('essayInput').oninput = function() {
-    document.getElementById('wordCount').innerText = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+    if(saved) loadUI(JSON.parse(saved));
 };
