@@ -21,7 +21,7 @@ body {
     background-color: var(--body-bg);
     color: var(--text);
     transition: 0.8s ease;
-    background-image: radial-gradient(circle at 50% 50%, var(--t-shadow) 0%, transparent 70%);
+    background-image: radial-gradient(circle at 50% 50%, var(--t-shadow) 0%, transparent 80%);
     background-attachment: fixed;
 }
 
