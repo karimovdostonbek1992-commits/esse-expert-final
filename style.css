@@ -2,30 +2,14 @@
     --bg-color: #010810;
     --text-color: #e2e8f0;
     --input-bg: rgba(0, 0, 0, 0.4);
-    /* Default (UZ) */
     --primary: #00ff88; 
     --shadow-color: rgba(0, 255, 136, 0.4);
 }
 
-/* 1. UZBEK DESIGNS (DEFAULT - GREEN) */
-body.theme-uz {
-    --primary: #00ff88;
-    --shadow-color: rgba(0, 255, 136, 0.4);
-}
+body.theme-uz { --primary: #00ff88; --shadow-color: rgba(0, 255, 136, 0.4); }
+body.theme-en { --primary: #00b4d8; --shadow-color: rgba(0, 180, 216, 0.4); }
+body.theme-ru { --primary: #ff4d4d; --shadow-color: rgba(255, 77, 77, 0.4); }
 
-/* 2. ENGLISH DESIGNS (BLUE - PROFESSIONAL) */
-body.theme-en {
-    --primary: #00b4d8; /* Yorqin Moviy */
-    --shadow-color: rgba(0, 180, 216, 0.4);
-}
-
-/* 3. RUSSIAN DESIGNS (ORANGE/RED - BOLD) */
-body.theme-ru {
-    --primary: #ff4d4d; /* Qizil neon */
-    --shadow-color: rgba(255, 77, 77, 0.4);
-}
-
-/* KUN REJIMI (LIGHT MODE) */
 body.light-mode {
     --bg-color: #f0f2f5;
     --text-color: #1e293b;
@@ -37,20 +21,16 @@ body {
     color: var(--text-color);
     font-family: 'Inter', sans-serif;
     transition: 0.5s ease;
-    /* Orqa fon rangi primary rangga qarab o'zgaradi */
     background-image: radial-gradient(circle at 50% -20%, var(--shadow-color), transparent 60%);
     background-attachment: fixed;
 }
 
-/* Sarlavha */
 .cyber-title {
     font-family: 'Orbitron', sans-serif;
     color: var(--primary);
     text-shadow: 0 0 25px var(--shadow-color);
-    transition: 0.5s;
 }
 
-/* Konteyner */
 .cyber-container {
     background: rgba(10, 25, 41, 0.7);
     backdrop-filter: blur(20px);
@@ -60,78 +40,55 @@ body {
     transition: 0.5s;
 }
 
-body.light-mode .cyber-container {
-    background: rgba(255, 255, 255, 0.8);
-    border-color: var(--primary);
-}
+body.light-mode .cyber-container { background: white; border-color: #ddd; color: black; }
 
-/* Inputlar */
 .cyber-input, textarea {
     background: var(--input-bg);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
     color: var(--text-color);
-    transition: 0.3s all;
 }
 
-body.light-mode .cyber-input { border: 1px solid #ccc; color: black; }
-
-.cyber-input:focus, textarea:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 15px var(--shadow-color);
-    outline: none;
-}
-
-/* Tugmalar */
 .btn-primary {
     background: var(--primary);
     color: #010810;
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
     letter-spacing: 2px;
-    border: none;
-    cursor: pointer;
-    transition: 0.3s;
     box-shadow: 0 0 20px var(--shadow-color);
 }
 
-.btn-primary:hover {
-    transform: scale(1.02);
-    box-shadow: 0 0 40px var(--primary);
-}
-
-/* Til tugmalari */
 .lang-btn {
     padding: 6px 15px;
     border-radius: 20px;
     font-weight: 800;
-    opacity: 0.6;
+    opacity: 0.5;
     transition: 0.3s;
     color: white;
 }
-body.light-mode .lang-btn { color: black; }
 
 .lang-btn.active {
     background: var(--primary);
     color: black !important;
     opacity: 1;
-    box-shadow: 0 0 15px var(--primary);
 }
 
-/* Mezonlar */
 .criteria-card {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.05);
-    padding: 15px 20px;
-    border-radius: 12px;
-    border-left: 4px solid var(--primary);
+    padding: 20px;
+    border-radius: 15px;
+    border-left: 5px solid var(--primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    font-weight: bold;
-    margin-bottom: 10px;
 }
-body.light-mode .criteria-card { background: white; border-color: #ddd; border-left-color: var(--primary); }
 
-.score { color: var(--primary); font-size: 1.1rem; }
-.hidden { display: none !important; }
+.score { color: var(--primary); font-family: 'Orbitron'; }
+
+@keyframes pulse-once {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+.animate-pulse-once { animation: pulse-once 0.5s ease-in-out; }
