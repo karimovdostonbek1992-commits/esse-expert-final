@@ -1,84 +1,110 @@
 :root {
     --bg-color: #010810;
     --text-color: #e2e8f0;
-    --input-bg: rgba(0, 0, 0, 0.4);
+    --input-bg: rgba(10, 25, 41, 0.7);
     --primary: #00ff88; 
-    --shadow-color: rgba(0, 255, 136, 0.4);
+    --shadow-color: rgba(0, 255, 136, 0.3);
 }
 
-body.theme-uz { --primary: #00ff88; --shadow-color: rgba(0, 255, 136, 0.4); }
-body.theme-en { --primary: #00b4d8; --shadow-color: rgba(0, 180, 216, 0.4); }
-body.theme-ru { --primary: #ff4d4d; --shadow-color: rgba(255, 77, 77, 0.4); }
+/* THEMES */
+body.theme-uz { --primary: #00ff88; --shadow-color: rgba(0, 255, 136, 0.3); }
+body.theme-en { --primary: #00b4d8; --shadow-color: rgba(0, 180, 216, 0.3); }
+body.theme-ru { --primary: #ff4d4d; --shadow-color: rgba(255, 77, 77, 0.3); }
 
+/* LIGHT MODE OVERRIDES */
 body.light-mode {
-    --bg-color: #f0f2f5;
+    --bg-color: #f8fafc;
     --text-color: #1e293b;
     --input-bg: #ffffff;
 }
+
+/* Light mode'da ranglarni o'qish qulay bo'lishi uchun to'qroq qilamiz */
+body.light-mode.theme-uz { --primary: #059669; }
+body.light-mode.theme-en { --primary: #0284c7; }
+body.light-mode.theme-ru { --primary: #dc2626; }
 
 body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Inter', sans-serif;
-    transition: 0.5s ease;
-    background-image: radial-gradient(circle at 50% -20%, var(--shadow-color), transparent 60%);
+    transition: all 0.5s ease;
+    background-image: radial-gradient(circle at 50% -20%, var(--shadow-color), transparent 70%);
     background-attachment: fixed;
 }
 
 .cyber-title {
     font-family: 'Orbitron', sans-serif;
     color: var(--primary);
-    text-shadow: 0 0 25px var(--shadow-color);
+    text-shadow: 0 0 20px var(--shadow-color);
 }
+
+.main-heading { color: var(--text-color); }
 
 .cyber-container {
-    background: rgba(10, 25, 41, 0.7);
+    background: var(--input-bg);
     backdrop-filter: blur(20px);
     border: 2px solid var(--primary);
-    box-shadow: 0 0 30px var(--shadow-color);
+    box-shadow: 0 10px 40px -10px var(--shadow-color);
     border-radius: 24px;
-    transition: 0.5s;
 }
 
-body.light-mode .cyber-container { background: white; border-color: #ddd; color: black; }
+/* MUHIM: Input va Textarea ranglari har doim dizayn rangida bo'ladi */
+#essay-topic, #essay-text {
+    color: var(--primary);
+}
 
-.cyber-input, textarea {
-    background: var(--input-bg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+#essay-topic::placeholder, #essay-text::placeholder {
+    color: var(--primary);
+    opacity: 0.3;
+}
+
+.cyber-input {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
     border-radius: 12px;
-    color: var(--text-color);
+}
+
+body.light-mode .cyber-input {
+    background: #f1f5f9;
+    border-color: #cbd5e1;
+    color: #1e293b;
 }
 
 .btn-primary {
     background: var(--primary);
-    color: #010810;
+    color: #ffffff;
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
     letter-spacing: 2px;
-    box-shadow: 0 0 20px var(--shadow-color);
+    box-shadow: 0 5px 15px var(--shadow-color);
+    transition: 0.3s;
 }
+
+.btn-primary:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
 .lang-btn {
     padding: 6px 15px;
     border-radius: 20px;
+    font-size: 11px;
     font-weight: 800;
-    opacity: 0.5;
+    opacity: 0.4;
     transition: 0.3s;
-    color: white;
+    color: var(--text-color);
 }
 
 .lang-btn.active {
     background: var(--primary);
-    color: black !important;
+    color: white !important;
     opacity: 1;
 }
 
 .criteria-card {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid rgba(255, 255, 255, 0.05);
+    background: var(--input-bg);
+    border: 1px solid rgba(255,255,255,0.05);
     padding: 20px;
-    border-radius: 15px;
-    border-left: 5px solid var(--primary);
+    border-radius: 18px;
+    border-left: 6px solid var(--primary);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -87,8 +113,7 @@ body.light-mode .cyber-container { background: white; border-color: #ddd; color:
 .score { color: var(--primary); font-family: 'Orbitron'; }
 
 @keyframes pulse-once {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+    0% { transform: scale(1); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
 }
-.animate-pulse-once { animation: pulse-once 0.5s ease-in-out; }
+.animate-pulse-once { animation: pulse-once 0.6s ease-in-out; }
