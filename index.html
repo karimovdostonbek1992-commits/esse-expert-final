@@ -3,13 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Multi Design</title>
+    <title>EssayLab AI - Professional Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body class="theme-uz"> <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#010810]">
+<body class="theme-uz">
+
+    <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#010810]">
         <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
             <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
             <div class="space-y-5 relative z-10">
@@ -22,24 +24,26 @@
 
     <main id="app-screen" class="hidden min-h-screen pb-20">
         <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
-            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/10">
+            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/10 border border-white/10">
                 <i class="fas fa-moon"></i>
             </button>
-            <div class="flex gap-2 bg-white/5 p-1 rounded-full">
+            <div class="flex gap-2 bg-white/5 p-1 rounded-full border border-white/10">
                 <button class="lang-btn active" data-lang="uz">UZ</button>
                 <button class="lang-btn" data-lang="en">EN</button>
                 <button class="lang-btn" data-lang="ru">RU</button>
             </div>
         </header>
 
-        <div class="max-w-3xl mx-auto mt-10 px-6 text-center">
-            <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
-            <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[#00ff88] mb-10"></p>
+        <div class="max-w-3xl mx-auto mt-10 px-6">
+            <div class="text-center mb-10">
+                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
+                <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[var(--primary)]"></p>
+            </div>
 
-            <div class="cyber-container p-8 text-left relative">
+            <div class="cyber-container p-8 relative mb-10">
                 <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none placeholder-white/20 text-[var(--primary)]">
                 <div class="h-px bg-white/10 w-full mb-6"></div>
-                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-64 bg-transparent resize-none focus:outline-none text-lg leading-relaxed text-white font-light"></textarea>
+                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed text-white font-light"></textarea>
                 
                 <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-6">
                     <span class="text-[var(--primary)] font-black italic tracking-wider"><span id="word-count">0</span> <span id="word-label">SO'Z</span></span>
@@ -47,15 +51,18 @@
                 </div>
             </div>
 
-            <div class="mt-12 max-w-lg mx-auto">
-                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-6 text-white">NATIJALAR</h3>
-                <div class="space-y-3" id="criteria-list">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list">
+                </div>
+
+            <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5">
+                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-4 text-white">Xatolar tahlili va tavsiyalar</h3>
+                <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed text-gray-300 italic border-dashed border-white/20">
                     </div>
             </div>
         </div>
     </main>
 
-    <div id="loader" class="fixed inset-0 z-[100] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
+    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
         <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
         <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
     </div>
