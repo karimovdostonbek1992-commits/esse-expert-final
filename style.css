@@ -1,16 +1,33 @@
 :root {
-    --primary: #00ff88;
     --bg-color: #010810;
-    --surface-color: rgba(10, 25, 41, 0.7);
     --text-color: #e2e8f0;
     --input-bg: rgba(0, 0, 0, 0.4);
+    /* Default (UZ) */
+    --primary: #00ff88; 
+    --shadow-color: rgba(0, 255, 136, 0.4);
+}
+
+/* 1. UZBEK DESIGNS (DEFAULT - GREEN) */
+body.theme-uz {
+    --primary: #00ff88;
+    --shadow-color: rgba(0, 255, 136, 0.4);
+}
+
+/* 2. ENGLISH DESIGNS (BLUE - PROFESSIONAL) */
+body.theme-en {
+    --primary: #00b4d8; /* Yorqin Moviy */
+    --shadow-color: rgba(0, 180, 216, 0.4);
+}
+
+/* 3. RUSSIAN DESIGNS (ORANGE/RED - BOLD) */
+body.theme-ru {
+    --primary: #ff4d4d; /* Qizil neon */
+    --shadow-color: rgba(255, 77, 77, 0.4);
 }
 
 /* KUN REJIMI (LIGHT MODE) */
 body.light-mode {
-    --primary: #2563eb; /* Moviy rang */
     --bg-color: #f0f2f5;
-    --surface-color: rgba(255, 255, 255, 0.9);
     --text-color: #1e293b;
     --input-bg: #ffffff;
 }
@@ -19,27 +36,33 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     font-family: 'Inter', sans-serif;
-    transition: background-color 0.5s, color 0.5s;
-    background-image: 
-        radial-gradient(circle at 50% -20%, rgba(0, 255, 136, 0.1), transparent 50%);
+    transition: 0.5s ease;
+    /* Orqa fon rangi primary rangga qarab o'zgaradi */
+    background-image: radial-gradient(circle at 50% -20%, var(--shadow-color), transparent 60%);
     background-attachment: fixed;
 }
 
-/* Neon Sarlavha */
+/* Sarlavha */
 .cyber-title {
     font-family: 'Orbitron', sans-serif;
     color: var(--primary);
-    text-shadow: 0 0 20px var(--primary);
+    text-shadow: 0 0 25px var(--shadow-color);
+    transition: 0.5s;
 }
 
-/* Asosiy Konteyner */
+/* Konteyner */
 .cyber-container {
-    background: var(--surface-color);
+    background: rgba(10, 25, 41, 0.7);
     backdrop-filter: blur(20px);
     border: 2px solid var(--primary);
-    box-shadow: 0 0 30px rgba(0, 255, 136, 0.15), inset 0 0 20px rgba(0, 255, 136, 0.05);
+    box-shadow: 0 0 30px var(--shadow-color);
     border-radius: 24px;
-    transition: 0.3s;
+    transition: 0.5s;
+}
+
+body.light-mode .cyber-container {
+    background: rgba(255, 255, 255, 0.8);
+    border-color: var(--primary);
 }
 
 /* Inputlar */
@@ -51,20 +74,17 @@ body {
     transition: 0.3s all;
 }
 
-body.light-mode .cyber-input, body.light-mode textarea {
-    border: 1px solid #ccc;
-    color: #000;
-}
+body.light-mode .cyber-input { border: 1px solid #ccc; color: black; }
 
 .cyber-input:focus, textarea:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.2);
+    box-shadow: 0 0 15px var(--shadow-color);
     outline: none;
 }
 
 /* Tugmalar */
 .btn-primary {
-    background: linear-gradient(90deg, var(--primary), #00cc6e);
+    background: var(--primary);
     color: #010810;
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
@@ -72,35 +92,30 @@ body.light-mode .cyber-input, body.light-mode textarea {
     border: none;
     cursor: pointer;
     transition: 0.3s;
-    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    box-shadow: 0 0 20px var(--shadow-color);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
+    transform: scale(1.02);
     box-shadow: 0 0 40px var(--primary);
 }
 
-/* Shishasimon tugmalar (Navigatsiya) */
-.glass-btn {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
-
+/* Til tugmalari */
 .lang-btn {
-    padding: 6px 12px;
+    padding: 6px 15px;
     border-radius: 20px;
-    font-size: 12px;
     font-weight: 800;
-    opacity: 0.5;
+    opacity: 0.6;
     transition: 0.3s;
+    color: white;
 }
+body.light-mode .lang-btn { color: black; }
 
 .lang-btn.active {
     background: var(--primary);
-    color: #000;
+    color: black !important;
     opacity: 1;
-    box-shadow: 0 0 10px var(--primary);
+    box-shadow: 0 0 15px var(--primary);
 }
 
 /* Mezonlar */
@@ -114,9 +129,9 @@ body.light-mode .cyber-input, body.light-mode textarea {
     justify-content: space-between;
     align-items: center;
     font-weight: bold;
-    font-size: 0.9rem;
+    margin-bottom: 10px;
 }
+body.light-mode .criteria-card { background: white; border-color: #ddd; border-left-color: var(--primary); }
 
-.score { color: var(--primary); }
-
+.score { color: var(--primary); font-size: 1.1rem; }
 .hidden { display: none !important; }
