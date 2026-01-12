@@ -3,147 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Expert</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>EssayLab AI - Cyber Expert</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap');
-
-        :root {
-            --neon: #00ff88;
-            --bg: #010810;
-            --surface: rgba(10, 25, 41, 0.7);
-        }
-
-        body {
-            background-color: var(--bg);
-            background-image: 
-                radial-gradient(circle at 50% -20%, rgba(0, 255, 136, 0.15), transparent 40%),
-                linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 30px 30px, 30px 30px;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-            min-height: 100vh;
-        }
-
-        /* Video'dagi asosiy ramka (Neon Border) */
-        .cyber-container {
-            border: 2px solid var(--neon);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2), inset 0 0 10px rgba(0, 255, 136, 0.1);
-            background: var(--surface);
-            backdrop-filter: blur(20px);
-            border-radius: 30px;
-        }
-
-        /* Inputlar dizayni */
-        .cyber-input {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 15px;
-            color: white;
-            transition: 0.3s;
-        }
-
-        .cyber-input:focus {
-            border-color: var(--neon);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-            outline: none;
-        }
-
-        /* Kirish tugmasi (Yashil Neon Gradient) */
-        .btn-kirish {
-            background: linear-gradient(90deg, #00ff88, #00cc6e);
-            color: #010810;
-            font-weight: 900;
-            font-family: 'Orbitron', sans-serif;
-            letter-spacing: 2px;
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
-            transition: 0.4s;
-        }
-
-        .btn-kirish:hover {
-            box-shadow: 0 0 50px rgba(0, 255, 136, 0.6);
-            transform: scale(1.02);
-        }
-
-        /* Mezonlar (Pastki qism) */
-        .mezon-card {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            padding: 12px 20px;
-            border-radius: 12px;
-            border-left: 4px solid var(--neon);
-            margin-bottom: 8px;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .hidden { display: none !important; }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="authPage" class="fixed inset-0 flex items-center justify-center p-6 z-[999]">
-        <div class="cyber-container w-full max-w-md p-10 text-center animate-in fade-in zoom-in duration-500">
-            <h1 class="text-5xl font-black italic mb-10 tracking-tighter" style="font-family: 'Orbitron'; color: var(--neon); text-shadow: 0 0 15px var(--neon);">EssayLab AI</h1>
+    <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-6">
+        <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
+            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-20 bg-[#00ff88] opacity-20 blur-3xl"></div>
             
-            <div class="space-y-5">
-                <input id="name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
-                <input id="alias" type="text" placeholder="Username (Taxallus)" class="cyber-input w-full p-4 text-center">
-                <input id="email" type="email" placeholder="Email (masalan: user@gmail.com)" class="cyber-input w-full p-4 text-center">
+            <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
+            
+            <div class="space-y-5 relative z-10">
+                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
+                <input id="input-alias" type="text" placeholder="Username (Taxallus)" class="cyber-input w-full p-4 text-center">
+                <input id="input-email" type="email" placeholder="Email (masalan: user@gmail.com)" class="cyber-input w-full p-4 text-center">
                 
-                <button onclick="enterApp()" class="btn-kirish w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
+                <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
             </div>
         </div>
     </div>
 
-    <main id="mainApp" class="hidden max-w-2xl mx-auto pt-10 px-4 pb-24">
-        <header class="flex justify-between items-center mb-10">
-            <div class="flex gap-4 text-xs font-bold">
-                <button class="text-[#00ff88] border-b-2 border-[#00ff88] pb-1">UZ</button>
-                <button class="opacity-40">EN</button>
-                <button class="opacity-40">RU</button>
+    <main id="app-screen" class="hidden min-h-screen pb-20">
+        <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
+            <button id="btn-theme" class="w-12 h-12 rounded-full glass-btn flex items-center justify-center text-xl text-yellow-400 transition hover:rotate-180">
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <div class="glass-btn px-2 py-1 flex gap-2 rounded-full">
+                <button class="lang-btn active" data-lang="uz">UZ</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
             </div>
-            <i class="fas fa-moon text-yellow-400 text-xl cursor-pointer"></i>
         </header>
 
-        <div class="text-center mb-10">
-            <h2 class="text-3xl font-bold tracking-tight mb-1" id="dynamicTitle">Milliy sertifikat bo'limi</h2>
-            <p id="userLabel" class="text-[10px] tracking-[4px] opacity-40 uppercase text-[#00ff88]"></p>
-        </div>
+        <div class="max-w-3xl mx-auto mt-10 px-6 text-center">
+            <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2">Milliy sertifikat bo'limi</h2>
+            <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[#00ff88] mb-10">GUEST MODE</p>
 
-        <div class="cyber-container p-6 mb-10">
-            <input type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none placeholder-white/20">
-            <div class="h-px bg-gradient-to-r from-transparent via-[#00ff88] to-transparent mb-6"></div>
-            <textarea id="mainEssay" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed"></textarea>
-            
-            <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-6">
-                <span class="text-[#00ff88] font-black italic">0 SO'Z</span>
-                <button class="btn-kirish px-10 py-3 rounded-xl text-sm">TAHLIL QILISH</button>
+            <div class="cyber-container p-8 text-left relative">
+                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none placeholder-white/20 text-[#00ff88]">
+                
+                <div class="h-px bg-gradient-to-r from-transparent via-[#00ff88] to-transparent mb-6 opacity-50"></div>
+                
+                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-64 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light"></textarea>
+                
+                <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-6">
+                    <span class="text-[#00ff88] font-black italic tracking-wider"><span id="word-count">0</span> SO'Z</span>
+                    <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
+                </div>
             </div>
-        </div>
 
-        <div class="space-y-4">
-            <h3 class="text-[10px] font-black tracking-[3px] opacity-30 uppercase">Mezonlar va ballar</h3>
-            <div class="mezon-card"><span>MAVZU</span> <span class="text-[#00ff88] font-bold">4 BALL</span></div>
-            <div class="mezon-card"><span>MANTIQ</span> <span class="text-[#00ff88] font-bold">3 BALL</span></div>
-            <div class="mezon-card"><span>IMLO</span> <span class="text-[#00ff88] font-bold">3 BALL</span></div>
+            <div class="mt-12 max-w-lg mx-auto">
+                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-6">Mezonlar va ballar</h3>
+                <div class="space-y-3" id="criteria-list">
+                    <div class="criteria-card">
+                        <span>MAVZU</span> 
+                        <span class="score">4 BALL</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </main>
 
-    <script>
-        function enterApp() {
-            const n = document.getElementById('name').value;
-            const a = document.getElementById('alias').value;
-            const e = document.getElementById('email').value;
+    <div id="loader" class="fixed inset-0 z-[100] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
+        <div class="w-16 h-16 border-4 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p class="text-[#00ff88] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
+    </div>
 
-            if(!n || !e) return alert("Ma'lumotlarni kiriting!");
-
-            document.getElementById('authPage').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('userLabel').innerText = `@${a} | ${e}`;
-        }
-    </script>
+    <script src="app.js"></script>
 </body>
 </html>
