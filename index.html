@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Professional Edition</title>
+    <title>EssayLab AI - Expert</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -15,16 +15,16 @@
         <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
             <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
             <div class="space-y-5 relative z-10">
-                <input id="input-name" type="text" placeholder="Ism" class="cyber-input w-full p-4 text-center">
-                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full p-4 text-center">
+                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
+                <input id="input-alias" type="text" placeholder="Taxallus (Username)" class="cyber-input w-full p-4 text-center">
                 <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
             </div>
         </div>
     </div>
 
-    <main id="app-screen" class="hidden min-h-screen pb-20">
+    <main id="app-screen" class="hidden min-h-screen pb-20 transition-colors duration-500">
         <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
-            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/10 border border-white/10">
+            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:scale-110 bg-white/5 border border-white/10">
                 <i class="fas fa-moon"></i>
             </button>
             <div class="flex gap-2 bg-white/5 p-1 rounded-full border border-white/10">
@@ -36,14 +36,14 @@
 
         <div class="max-w-3xl mx-auto mt-10 px-6">
             <div class="text-center mb-10">
-                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
+                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 main-heading">Milliy sertifikat bo'limi</h2>
                 <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[var(--primary)]"></p>
             </div>
 
-            <div class="cyber-container p-8 relative mb-10">
-                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none placeholder-white/20 text-[var(--primary)]">
-                <div class="h-px bg-white/10 w-full mb-6"></div>
-                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed text-white font-light"></textarea>
+            <div class="cyber-container p-8 relative mb-10 transition-all duration-500">
+                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none transition-colors">
+                <div class="h-px bg-[var(--primary)] opacity-20 w-full mb-6"></div>
+                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light transition-colors"></textarea>
                 
                 <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-6">
                     <span class="text-[var(--primary)] font-black italic tracking-wider"><span id="word-count">0</span> <span id="word-label">SO'Z</span></span>
@@ -51,20 +51,18 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list">
-                </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list"></div>
 
             <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5">
-                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-4 text-white">Xatolar tahlili va tavsiyalar</h3>
-                <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed text-gray-300 italic border-dashed border-white/20">
-                    </div>
+                <h3 class="text-[10px] font-black tracking-[4px] opacity-40 uppercase mb-4 main-heading">Xatolar tahlili va tavsiyalar</h3>
+                <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed italic border-dashed border-white/20"></div>
             </div>
         </div>
     </main>
 
-    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
+    <div id="loader" class="fixed inset-0 z-[1000] bg-black/95 hidden flex-col items-center justify-center backdrop-blur-xl">
         <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
+        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse uppercase">AI Tahlil qilmoqda...</p>
     </div>
 
     <script src="app.js"></script>
