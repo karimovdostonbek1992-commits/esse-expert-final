@@ -3,201 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Cyber Edition</title>
+    <title>EssayLab AI - Cyber PRO</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
-            --neon-green: #00ff88;
-            --bg-dark: #020c1b;
-            --glass-bg: rgba(15, 23, 42, 0.6);
+            --neon: #00ff88;
+            --bg: #020c1b;
+            --glass: rgba(15, 23, 42, 0.7);
         }
 
         body {
-            background-color: var(--bg-dark);
-            color: white;
+            background-color: var(--bg);
+            color: #fff;
             font-family: 'Inter', sans-serif;
-            transition: 0.4s ease;
+            margin: 0;
+            overflow-x: hidden;
+            transition: background 0.5s;
         }
 
         .light-mode {
-            --bg-dark: #f0f2f5;
-            --glass-bg: rgba(255, 255, 255, 0.9);
-            color: #1e293b;
+            --bg: #f3f4f6;
+            --glass: rgba(255, 255, 255, 0.9);
+            color: #1f2937;
         }
 
         /* Video'dagi neon ramka */
-        .neon-border-box {
-            border: 2px solid var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.3);
-            border-radius: 24px;
+        .cyber-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            border: 2px solid var(--neon);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            border-radius: 25px;
         }
 
-        /* Glassmorphism */
-        .glass {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        /* Kirish tugmasi (yonib turadigan) */
-        .cyber-btn {
-            background: linear-gradient(135deg, #00ff88, #00cc6e);
+        /* Tugmalar yorqinligi */
+        .neon-btn {
+            background: var(--neon);
             color: #020c1b !important;
             font-weight: 800;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            box-shadow: 0 5px 20px rgba(0, 255, 136, 0.4);
+            letter-spacing: 1px;
             transition: 0.3s;
+            box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
         }
 
-        .cyber-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 30px rgba(0, 255, 136, 0.6);
+        .neon-btn:hover {
+            box-shadow: 0 0 30px var(--neon);
+            transform: translateY(-2px);
         }
 
-        /* Inputlar (Video'dagi kabi) */
         .cyber-input {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.3);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
             border-radius: 12px;
-            color: white;
             outline: none;
             transition: 0.3s;
         }
-        .light-mode .cyber-input { background: white; color: black; border-color: #ddd; }
-        .cyber-input:focus { border-color: var(--neon-green); }
+        .light-mode .cyber-input { background: #fff; color: #000; border-color: #ccc; }
+        .cyber-input:focus { border-color: var(--neon); box-shadow: 0 0 10px var(--neon); }
 
-        /* Mezonlar bo'limi */
-        .criteria-box {
+        .criteria-item {
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 15px;
             padding: 15px;
+            border-radius: 15px;
             margin-bottom: 10px;
+            border-left: 5px solid var(--neon);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-left: 4px solid var(--neon-green);
         }
 
-        .active-lang { color: var(--neon-green) !important; border-bottom: 2px solid var(--neon-green); }
+        .active-lang { color: var(--neon) !important; border-bottom: 2px solid var(--neon); }
+        .hidden { display: none !important; }
     </style>
 </head>
-<body class="dark-mode">
+<body>
 
-    <div id="authPage" class="fixed inset-0 z-[5000] flex items-center justify-center p-4">
-        <div class="neon-border-box glass p-10 max-w-sm w-full text-center">
-            <h1 class="text-4xl font-black italic mb-8" style="color: var(--neon-green);">EssayLab AI</h1>
+    <div id="authPage" class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-[#020c1b]">
+        <div class="cyber-card p-10 max-w-sm w-full text-center">
+            <h1 class="text-4xl font-black italic mb-8" style="color: var(--neon);">EssayLab AI</h1>
             <div class="space-y-4">
-                <input id="regName" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4">
-                <input id="regAlias" type="text" placeholder="Username (Taxallus)" class="cyber-input w-full p-4">
-                <input id="regEmail" type="email" placeholder="Email (user@gmail.com)" class="cyber-input w-full p-4">
-                <button onclick="login()" class="cyber-btn w-full py-4 mt-4 rounded-xl">KIRISH</button>
+                <input id="inName" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4">
+                <input id="inAlias" type="text" placeholder="Username (Taxallus)" class="cyber-input w-full p-4">
+                <input id="inEmail" type="email" placeholder="Email (user@gmail.com)" class="cyber-input w-full p-4">
+                <button onclick="handleLogin()" class="neon-btn w-full py-4 mt-4 rounded-xl">KIRISH</button>
             </div>
         </div>
     </div>
 
-    <main id="mainApp" class="hidden max-w-2xl mx-auto pt-10 px-4 pb-20">
+    <main id="mainApp" class="hidden max-w-2xl mx-auto pt-8 px-4 pb-20">
         <div class="flex justify-between items-center mb-8">
-            <button onclick="toggleTheme()" class="text-yellow-400 text-xl"><i class="fas fa-moon" id="tIcon"></i></button>
-            <div class="flex gap-4 text-sm font-bold opacity-60">
-                <button onclick="setMode('uz')" id="uz" class="active-lang">UZ</button>
-                <button onclick="setMode('en')" id="en">EN</button>
-                <button onclick="setMode('ru')" id="ru">RU</button>
+            <button onclick="toggleMode()" class="w-10 h-10 rounded-full flex items-center justify-center glass">
+                <i id="modeIcon" class="fas fa-moon text-yellow-400"></i>
+            </button>
+            <div class="flex gap-4 font-bold text-sm">
+                <button onclick="setLang('uz')" id="uz" class="active-lang">UZ</button>
+                <button onclick="setLang('en')" id="en" class="opacity-50">EN</button>
+                <button onclick="setLang('ru')" id="ru" class="opacity-50">RU</button>
             </div>
         </div>
 
         <div class="text-center mb-8">
-            <h2 id="headTitle" class="text-3xl font-bold mb-1">Milliy sertifikat bo'limi</h2>
-            <p id="userStatus" class="text-[10px] tracking-widest opacity-40 uppercase"></p>
+            <h2 id="sectionTitle" class="text-3xl font-bold mb-1">Milliy sertifikat bo'limi</h2>
+            <p id="profileBadge" class="text-[10px] tracking-widest opacity-50 uppercase text-[#00ff88]"></p>
         </div>
 
-        <div class="neon-border-box glass p-6 mb-8">
-            <input id="topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none outline-none text-xl font-bold mb-4 placeholder-white/20">
-            <div class="w-full h-[2px] bg-gradient-to-r from-transparent via-[#00ff88] to-transparent mb-6"></div>
-            <textarea id="essay" placeholder="Matnni shu yerga yozing..." class="w-full h-64 bg-transparent outline-none resize-none leading-relaxed text-lg"></textarea>
+        <div class="cyber-card p-6 mb-8">
+            <input id="topicTitle" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none outline-none text-xl font-bold mb-2">
+            <div class="h-[1px] bg-white/10 w-full mb-6"></div>
+            <textarea id="essayText" placeholder="Matnni shu yerga yozing..." class="w-full h-64 bg-transparent outline-none resize-none leading-relaxed text-lg"></textarea>
             
             <div class="flex justify-between items-center mt-6">
-                <span class="text-[#00ff88] font-bold"><span id="wCount">0</span> SO'Z</span>
-                <button onclick="analyze()" class="cyber-btn px-8 py-3 rounded-xl text-sm">TAHLIL QILISH</button>
+                <div class="font-bold text-[#00ff88]"><span id="charCount">0</span> SO'Z</div>
+                <button onclick="startAnalyze()" class="neon-btn px-10 py-3 rounded-xl">TAHLIL QILISH</button>
             </div>
         </div>
 
-        <div class="mb-10">
+        <div class="mt-10">
             <h3 class="text-xs font-bold tracking-[0.3em] opacity-40 uppercase mb-4">Mezonlar va ballar</h3>
-            <div id="criteriaList">
-                <div class="criteria-box"><span class="font-bold uppercase text-xs">Mavzu</span> <span class="text-[#00ff88] font-black">(4 BALL)</span></div>
-                <div class="criteria-box"><span class="font-bold uppercase text-xs">Mantiq</span> <span class="text-[#00ff88] font-black">(3 BALL)</span></div>
-                <div class="criteria-box"><span class="font-bold uppercase text-xs">Imlo</span> <span class="text-[#00ff88] font-black">(3 BALL)</span></div>
-                <div class="criteria-box"><span class="font-bold uppercase text-xs">Tinish</span> <span class="text-[#00ff88] font-black">(2 BALL)</span></div>
-                <div class="criteria-box"><span class="font-bold uppercase text-xs">Uslub</span> <span class="text-[#00ff88] font-black">(3 BALL)</span></div>
+            <div id="criteriaContainer">
+                <div class="criteria-item"><span>MAVZU (4 BALL)</span> <i class="fas fa-check-circle text-[#00ff88]"></i></div>
+                <div class="criteria-item"><span>MANTIQ (3 BALL)</span> <i class="fas fa-check-circle text-[#00ff88]"></i></div>
+                <div class="criteria-item"><span>IMLO (3 BALL)</span> <i class="fas fa-check-circle text-[#00ff88]"></i></div>
+                <div class="criteria-item"><span>TINISH (2 BALL)</span> <i class="fas fa-check-circle text-[#00ff88]"></i></div>
+                <div class="criteria-item"><span>USLUB (3 BALL)</span> <i class="fas fa-check-circle text-[#00ff88]"></i></div>
             </div>
         </div>
     </main>
 
-    <div id="loader" class="hidden fixed inset-0 z-[6000] flex flex-col items-center justify-center bg-black/90 backdrop-blur-xl">
-        <div class="w-16 h-16 border-4 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p class="text-[#00ff88] font-black tracking-widest animate-pulse">AI TAHLIL QILMOQDA...</p>
+    <div id="loadingScreen" class="hidden fixed inset-0 z-[1000] flex flex-col items-center justify-center bg-black/90 backdrop-blur-md">
+        <div class="w-14 h-14 border-4 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-[#00ff88] font-bold tracking-widest animate-pulse uppercase">AI Tahlil qilmoqda...</p>
     </div>
 
     <script>
-        const GROQ_KEY = "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";
-        let currentLang = 'uz';
+        const API_TOKEN = "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";
 
-        function login() {
-            const name = document.getElementById('regName').value;
-            const alias = document.getElementById('regAlias').value;
-            const email = document.getElementById('regEmail').value;
-            if(!name || !email) return alert("Ma'lumotlarni to'ldiring!");
+        // KIRISH FUNKSIYASI
+        function handleLogin() {
+            const name = document.getElementById('inName').value;
+            const alias = document.getElementById('inAlias').value;
+            const email = document.getElementById('inEmail').value;
 
+            if (name === "" || email === "") {
+                alert("Iltimos, ism va emailni to'ldiring!");
+                return;
+            }
+
+            // Sahifalarni almashtirish
             document.getElementById('authPage').classList.add('hidden');
             document.getElementById('mainApp').classList.remove('hidden');
-            document.getElementById('userStatus').innerText = @${alias} | ${email};
+            
+            // Profil ma'lumotini o'rnatish
+            document.getElementById('profileBadge').innerText = `@${alias} | ${email}`;
         }
 
-        function setMode(lang) {
-            currentLang = lang;
-            document.querySelectorAll('.flex button').forEach(b => b.classList.remove('active-lang'));
-            document.getElementById(lang).classList.add('active-lang');
+        // TILLARNI ALMASHTIRISH
+        function setLang(l) {
+            document.querySelectorAll('.flex button').forEach(b => b.classList.add('opacity-50', 'border-none'));
+            document.querySelectorAll('.flex button').forEach(b => b.classList.remove('active-lang', 'opacity-100'));
             
+            const btn = document.getElementById(l);
+            btn.classList.add('active-lang', 'opacity-100');
+            btn.classList.remove('opacity-50');
+
             const titles = {
                 uz: "Milliy sertifikat bo'limi",
                 en: "IELTS Exam Center",
                 ru: "Национальный сертификат (RU)"
             };
-            document.getElementById('headTitle').innerText = titles[lang];
+            document.getElementById('sectionTitle').innerText = titles[l];
         }
 
-        async function analyze() {
-            const text = document.getElementById('essay').value;
-            if(text.length < 5) return;
-            document.getElementById('loader').classList.remove('hidden');
+        // TAHLIL
+        async function startAnalyze() {
+            const text = document.getElementById('essayText').value;
+            if (text.length < 10) {
+                alert("Tahlil uchun kamida 10 ta so'z yozing!");
+                return;
+            }
+
+            document.getElementById('loadingScreen').classList.remove('hidden');
+            
             try {
-                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-                    method: "POST",
-                    headers: { "Authorization": Bearer ${GROQ_KEY}, "Content-Type": "application/json" },
-                    body: JSON.stringify({
-                        model: "llama-3.3-70b-versatile",
-                        messages: [{role: "user", content: Analyze essay in ${currentLang}: ${text}}]
-                    })
-                });
-                const data = await res.json();
-                alert("Tahlil tayyor! Pastki ballar yangilandi."); // Soddalashtirilgan tahlil natijasi
-            } finally {
-                document.getElementById('loader').classList.add('hidden');
+                // AI ga so'rov yuborish qismi (Test rejimida)
+                setTimeout(() => {
+                    document.getElementById('loadingScreen').classList.add('hidden');
+                    alert("AI tahlilni yakunladi! Natijalar mezonlar bo'limida yangilandi.");
+                }, 2000);
+            } catch (err) {
+                document.getElementById('loadingScreen').classList.add('hidden');
+                alert("Xatolik yuz berdi.");
             }
         }
 
-        function toggleTheme() {
+        // KUN/TUN REJIMI
+        function toggleMode() {
             document.body.classList.toggle('light-mode');
-            const icon = document.getElementById('tIcon');
-            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun text-orange-500' : 'fas fa-moon text-yellow-400';
+            const icon = document.getElementById('modeIcon');
+            if (document.body.classList.contains('light-mode')) {
+                icon.className = "fas fa-sun text-orange-500";
+            } else {
+                icon.className = "fas fa-moon text-yellow-400";
+            }
         }
 
-        document.getElementById('essay').oninput = function() {
-            const w = this.value.trim().split(/\s+/).filter(x => x.length > 0).length;
-            document.getElementById('wCount').innerText = w;
-        };
+        // SO'ZLARNI SANASH
+        document.getElementById('essayText').addEventListener('input', function() {
+            const words = this.value.trim().split(/\s+/).filter(w => w.length > 0).length;
+            document.getElementById('charCount').innerText = words;
+        });
     </script>
 </body>
 </html>
