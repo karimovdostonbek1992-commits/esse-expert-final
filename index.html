@@ -3,25 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Cyber Expert</title>
+    <title>EssayLab AI - Multi Design</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="style.css">
 </head>
-<body>
-
-    <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-6">
+<body class="theme-uz"> <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#010810]">
         <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
-            <div class="absolute top-0 left-1/2 transform -translate-x-1/2 w-full h-20 bg-[#00ff88] opacity-20 blur-3xl"></div>
-            
             <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
-            
             <div class="space-y-5 relative z-10">
-                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
-                <input id="input-alias" type="text" placeholder="Username (Taxallus)" class="cyber-input w-full p-4 text-center">
-                <input id="input-email" type="email" placeholder="Email (masalan: user@gmail.com)" class="cyber-input w-full p-4 text-center">
-                
+                <input id="input-name" type="text" placeholder="Ism" class="cyber-input w-full p-4 text-center">
+                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full p-4 text-center">
                 <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
             </div>
         </div>
@@ -29,11 +22,10 @@
 
     <main id="app-screen" class="hidden min-h-screen pb-20">
         <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
-            <button id="btn-theme" class="w-12 h-12 rounded-full glass-btn flex items-center justify-center text-xl text-yellow-400 transition hover:rotate-180">
+            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/10">
                 <i class="fas fa-moon"></i>
             </button>
-
-            <div class="glass-btn px-2 py-1 flex gap-2 rounded-full">
+            <div class="flex gap-2 bg-white/5 p-1 rounded-full">
                 <button class="lang-btn active" data-lang="uz">UZ</button>
                 <button class="lang-btn" data-lang="en">EN</button>
                 <button class="lang-btn" data-lang="ru">RU</button>
@@ -41,37 +33,31 @@
         </header>
 
         <div class="max-w-3xl mx-auto mt-10 px-6 text-center">
-            <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2">Milliy sertifikat bo'limi</h2>
-            <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[#00ff88] mb-10">GUEST MODE</p>
+            <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
+            <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[#00ff88] mb-10"></p>
 
             <div class="cyber-container p-8 text-left relative">
-                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none placeholder-white/20 text-[#00ff88]">
-                
-                <div class="h-px bg-gradient-to-r from-transparent via-[#00ff88] to-transparent mb-6 opacity-50"></div>
-                
-                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-64 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light"></textarea>
+                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none placeholder-white/20 text-[var(--primary)]">
+                <div class="h-px bg-white/10 w-full mb-6"></div>
+                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-64 bg-transparent resize-none focus:outline-none text-lg leading-relaxed text-white font-light"></textarea>
                 
                 <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-6">
-                    <span class="text-[#00ff88] font-black italic tracking-wider"><span id="word-count">0</span> SO'Z</span>
+                    <span class="text-[var(--primary)] font-black italic tracking-wider"><span id="word-count">0</span> <span id="word-label">SO'Z</span></span>
                     <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
                 </div>
             </div>
 
             <div class="mt-12 max-w-lg mx-auto">
-                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-6">Mezonlar va ballar</h3>
+                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-6 text-white">NATIJALAR</h3>
                 <div class="space-y-3" id="criteria-list">
-                    <div class="criteria-card">
-                        <span>MAVZU</span> 
-                        <span class="score">4 BALL</span>
                     </div>
-                </div>
             </div>
         </div>
     </main>
 
     <div id="loader" class="fixed inset-0 z-[100] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
-        <div class="w-16 h-16 border-4 border-[#00ff88] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p class="text-[#00ff88] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
+        <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
     </div>
 
     <script src="app.js"></script>
