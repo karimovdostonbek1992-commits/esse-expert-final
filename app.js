@@ -1,4 +1,5 @@
-const API_KEY = "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";
+// FAQAT MANA SHU KODNI QOLDIRING. ESKILARINI O'CHIRING!
+const API_KEY = "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"; 
 let currentLang = 'uz';
 
 const systems = {
@@ -22,16 +23,23 @@ const systems = {
     }
 };
 
-// LOGIN
+// LOGIN FUNKSIYASI
 document.getElementById('btn-login').addEventListener('click', () => {
-    const alias = document.getElementById('input-alias').value || "GUEST";
+    const name = document.getElementById('input-name').value;
+    const alias = document.getElementById('input-alias').value;
+    
+    if(!name || !alias) {
+        alert("Iltimos, ism va taxallusni kiriting!");
+        return;
+    }
+
     document.getElementById('auth-screen').classList.add('hidden');
     document.getElementById('app-screen').classList.remove('hidden');
     document.getElementById('user-badge').innerText = `@${alias.toUpperCase()} | ONLINE`;
     setTheme('uz');
 });
 
-// THEME & LANG
+// TILNI O'ZGARTIRISH
 document.querySelectorAll('.lang-btn').forEach(btn => {
     btn.addEventListener('click', (e) => setTheme(e.target.getAttribute('data-lang')));
 });
@@ -54,7 +62,7 @@ function renderCriteria(scores) {
         const val = scores[index] !== null ? scores[index] : config.max;
         const label = scores[index] !== null ? "NATIJA" : "MAX BALL";
         list.innerHTML += `
-            <div class="criteria-card ${scores[index] === null ? 'opacity-50' : ''}">
+            <div class="criteria-card ${scores[index] === null ? 'opacity-50' : 'animate-pulse-once'}">
                 <div class="flex flex-col">
                     <span class="text-[9px] text-[var(--primary)] font-bold">${label}</span>
                     <span class="text-sm font-bold tracking-tight">${name}</span>
@@ -64,11 +72,15 @@ function renderCriteria(scores) {
     });
 }
 
-// AI ANALYSIS
+// TAHLIL QILISH
 document.getElementById('btn-analyze').addEventListener('click', async () => {
     const text = document.getElementById('essay-text').value;
     const topic = document.getElementById('essay-topic').value;
-    if(text.trim().length < 20) return alert("Matn kiriting!");
+    
+    if(text.trim().split(/\s+/).length < 20) {
+        alert("Matn juda qisqa! Kamida 20 ta so'z yozing.");
+        return;
+    }
 
     const loader = document.getElementById('loader');
     loader.classList.remove('hidden');
@@ -82,9 +94,9 @@ document.getElementById('btn-analyze').addEventListener('click', async () => {
                 model: "llama-3.3-70b-versatile",
                 messages: [{ 
                     role: "system", 
-                    content: `${systems[currentLang].prompt}. Javob formati: 
-                    Scores: [4 ta son]
-                    Feedback: [Tahlil va xatolar ${currentLang} tilida]`
+                    content: `${systems[currentLang].prompt}. Javobni FAQAT quyidagi formatda ber:
+                    Scores: [4 ta son vergul bilan]
+                    Feedback: [Tahlil va xatolar tushuntirishi ${currentLang} tilida]`
                 }, { role: "user", content: `Mavzu: ${topic}\n\nMatn: ${text}` }]
             })
         });
@@ -92,25 +104,29 @@ document.getElementById('btn-analyze').addEventListener('click', async () => {
         const data = await res.json();
         const content = data.choices[0].message.content;
         
-        const scores = content.match(/Scores:\s*([\d.,\s]+)/i)[1].match(/[\d.]+/g);
-        const feedback = content.split(/Feedback:/i)[1].trim();
+        const scoresMatch = content.match(/Scores:\s*([\d.,\s]+)/i);
+        const scores = scoresMatch ? scoresMatch[1].match(/[\d.]+/g) : [0,0,0,0];
+        const feedbackParts = content.split(/Feedback:/i);
+        const feedback = feedbackParts.length > 1 ? feedbackParts[1].trim() : "Tahlil yakunlandi.";
 
         renderCriteria(scores);
         document.getElementById('feedback-content').innerText = feedback;
         document.getElementById('feedback-section').classList.remove('hidden');
         document.getElementById('btn-download').classList.remove('hidden');
     } catch (e) {
-        alert("Xatolik yuz berdi.");
+        console.error(e);
+        alert("API xatoligi yuz berdi.");
     } finally {
         loader.classList.add('hidden');
         loader.style.display = 'none';
     }
 });
 
-// PDF GENERATOR
+// PDF YUKLASH
 document.getElementById('btn-download').addEventListener('click', () => {
     const element = document.createElement('div');
-    element.className = "p-10 text-black bg-white";
+    element.style.padding = '20px';
+    element.style.fontFamily = 'Arial';
     
     const name = document.getElementById('input-name').value;
     const topic = document.getElementById('essay-topic').value;
@@ -119,11 +135,11 @@ document.getElementById('btn-download').addEventListener('click', () => {
     const scores = Array.from(document.querySelectorAll('.criteria-card')).map(c => c.innerText).join('\n');
 
     element.innerHTML = `
-        <h1 style="color: #059669; border-bottom: 2px solid #059669;">EssayLab AI Hisoboti</h1>
+        <h1 style="color: #059669;">EssayLab AI Hisoboti</h1>
         <p><strong>Foydalanuvchi:</strong> ${name}</p>
         <p><strong>Mavzu:</strong> ${topic}</p>
         <hr>
-        <h3>Esse matni:</h3><p>${text}</p>
+        <h3>Esse matni:</h3><p style="white-space: pre-wrap;">${text}</p>
         <hr>
         <h3>Natijalar:</h3><pre>${scores}</pre>
         <hr>
@@ -132,16 +148,20 @@ document.getElementById('btn-download').addEventListener('click', () => {
 
     html2pdf().set({ 
         margin: 10, 
-        filename: `${name}_natija.pdf`,
+        filename: `EssayReport_${name}.pdf`,
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' } 
     }).from(element).save();
 });
 
-// OTHER TOOLS
+// KUN/TUN REJIMI
 document.getElementById('btn-theme').addEventListener('click', () => {
     document.body.classList.toggle('light-mode');
+    const icon = document.getElementById('btn-theme').querySelector('i');
+    icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
 });
 
+// SO'Z SANASH
 document.getElementById('essay-text').addEventListener('input', function() {
-    document.getElementById('word-count').innerText = this.value.trim().split(/\s+/).filter(x => x).length;
+    const words = this.value.trim().split(/\s+/).filter(x => x).length;
+    document.getElementById('word-count').innerText = words;
 });
