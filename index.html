@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Expert</title>
+    <title>EssayLab AI - Final Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="theme-uz">
@@ -16,15 +17,15 @@
             <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
             <div class="space-y-5 relative z-10">
                 <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
-                <input id="input-alias" type="text" placeholder="Taxallus (Username)" class="cyber-input w-full p-4 text-center">
+                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full p-4 text-center">
                 <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
             </div>
         </div>
     </div>
 
-    <main id="app-screen" class="hidden min-h-screen pb-20 transition-colors duration-500">
+    <main id="app-screen" class="hidden min-h-screen pb-20">
         <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
-            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:scale-110 bg-white/5 border border-white/10">
+            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/5 border border-white/10">
                 <i class="fas fa-moon"></i>
             </button>
             <div class="flex gap-2 bg-white/5 p-1 rounded-full border border-white/10">
@@ -36,33 +37,117 @@
 
         <div class="max-w-3xl mx-auto mt-10 px-6">
             <div class="text-center mb-10">
-                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 main-heading">Milliy sertifikat bo'limi</h2>
+                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
                 <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[var(--primary)]"></p>
             </div>
 
-            <div class="cyber-container p-8 relative mb-10 transition-all duration-500">
-                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none transition-colors">
-                <div class="h-px bg-[var(--primary)] opacity-20 w-full mb-6"></div>
-                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light transition-colors"></textarea>
+            <div class="cyber-container p-8 relative mb-10">
+                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none">
+                <div class="h-px bg-white/10 w-full mb-6"></div>
+                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light"></textarea>
                 
-                <div class="flex justify-between items-center mt-6 border-t border-white/5 pt-6">
-                    <span class="text-[var(--primary)] font-black italic tracking-wider"><span id="word-count">0</span> <span id="word-label">SO'Z</span></span>
-                    <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
+                <div class="flex flex-wrap gap-4 justify-between items-center mt-6 border-t border-white/5 pt-6">
+                    <span class="text-[var(--primary)] font-black italic tracking-wider">
+                        <span id="word-count">0</span> <span id="word-label">SO'Z</span>
+                    </span>
+                    <div class="flex gap-3">
+                        <button id="btn-download" class="hidden bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl text-sm border border-white/10 transition-all">
+                            <i class="fas fa-file-pdf mr-2"></i> PDF
+                        </button>
+                        <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
+                    </div>
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list"></div>
 
-            <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5">
-                <h3 class="text-[10px] font-black tracking-[4px] opacity-40 uppercase mb-4 main-heading">Xatolar tahlili va tavsiyalar</h3>
+            <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5 pb-10">
+                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-4 text-white">Xatolar tahlili va tavsiyalar</h3>
                 <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed italic border-dashed border-white/20"></div>
             </div>
         </div>
     </main>
 
-    <div id="loader" class="fixed inset-0 z-[1000] bg-black/95 hidden flex-col items-center justify-center backdrop-blur-xl">
+    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
         <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse uppercase">AI Tahlil qilmoqda...</p>
+        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html><!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EssayLab AI - Final Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-uz">
+
+    <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#010810]">
+        <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
+            <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
+            <div class="space-y-5 relative z-10">
+                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
+                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full p-4 text-center">
+                <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
+            </div>
+        </div>
+    </div>
+
+    <main id="app-screen" class="hidden min-h-screen pb-20">
+        <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
+            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/5 border border-white/10">
+                <i class="fas fa-moon"></i>
+            </button>
+            <div class="flex gap-2 bg-white/5 p-1 rounded-full border border-white/10">
+                <button class="lang-btn active" data-lang="uz">UZ</button>
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
+            </div>
+        </header>
+
+        <div class="max-w-3xl mx-auto mt-10 px-6">
+            <div class="text-center mb-10">
+                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
+                <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[var(--primary)]"></p>
+            </div>
+
+            <div class="cyber-container p-8 relative mb-10">
+                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none">
+                <div class="h-px bg-white/10 w-full mb-6"></div>
+                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light"></textarea>
+                
+                <div class="flex flex-wrap gap-4 justify-between items-center mt-6 border-t border-white/5 pt-6">
+                    <span class="text-[var(--primary)] font-black italic tracking-wider">
+                        <span id="word-count">0</span> <span id="word-label">SO'Z</span>
+                    </span>
+                    <div class="flex gap-3">
+                        <button id="btn-download" class="hidden bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl text-sm border border-white/10 transition-all">
+                            <i class="fas fa-file-pdf mr-2"></i> PDF
+                        </button>
+                        <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list"></div>
+
+            <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5 pb-10">
+                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-4 text-white">Xatolar tahlili va tavsiyalar</h3>
+                <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed italic border-dashed border-white/20"></div>
+            </div>
+        </div>
+    </main>
+
+    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
+        <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
     </div>
 
     <script src="app.js"></script>
