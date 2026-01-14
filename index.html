@@ -1,155 +1,203 @@
 <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Final Edition</title>
+    <title>EssayLab AI - Tayyor Tizim</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        :root {
+            --bg-color: #010810;
+            --text-color: #e2e8f0;
+            --input-bg: rgba(10, 25, 41, 0.7);
+            --primary: #00ff88; 
+            --shadow-color: rgba(0, 255, 136, 0.4);
+        }
+        body.theme-uz { --primary: #00ff88; --shadow-color: rgba(0, 255, 136, 0.4); }
+        body.theme-en { --primary: #00b4d8; --shadow-color: rgba(0, 180, 216, 0.4); }
+        body.theme-ru { --primary: #ff4d4d; --shadow-color: rgba(255, 77, 77, 0.4); }
+        body.light-mode { --bg-color: #f8fafc; --text-color: #1e293b; --input-bg: #ffffff; }
+        body.light-mode.theme-uz { --primary: #059669; }
+        body.light-mode.theme-en { --primary: #0284c7; }
+        body.light-mode.theme-ru { --primary: #dc2626; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            transition: 0.5s ease;
+            background-image: radial-gradient(circle at 50% -20%, var(--shadow-color), transparent 60%);
+            min-height: 100vh;
+        }
+        .cyber-title { font-family: 'Orbitron'; color: var(--primary); text-shadow: 0 0 25px var(--shadow-color); }
+        .cyber-container {
+            background: var(--input-bg);
+            backdrop-filter: blur(20px);
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 30px var(--shadow-color);
+            border-radius: 24px;
+        }
+        .cyber-input { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; color: white; padding: 15px; }
+        body.light-mode .cyber-input { background: #f1f5f9; color: black; border-color: #ccc; }
+        .btn-primary { background: var(--primary); color: #000; font-family: 'Orbitron'; font-weight: 900; letter-spacing: 2px; }
+        .lang-btn { padding: 6px 15px; border-radius: 20px; font-weight: 800; opacity: 0.5; cursor: pointer; }
+        .lang-btn.active { background: var(--primary); color: #000; opacity: 1; }
+        .criteria-card { background: var(--input-bg); border: 1px solid rgba(255,255,255,0.05); padding: 20px; border-radius: 18px; border-left: 5px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        .score { color: var(--primary); font-family: 'Orbitron'; font-weight: 900; }
+        #essay-topic, #essay-text { color: var(--primary); outline: none; }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body class="theme-uz">
 
     <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#010810]">
-        <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
-            <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
-            <div class="space-y-5 relative z-10">
-                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
-                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full p-4 text-center">
-                <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
+        <div class="cyber-container w-full max-w-md p-10 text-center">
+            <h1 class="text-4xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
+            <div class="space-y-5">
+                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full text-center">
+                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full text-center">
+                <button onclick="login()" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl shadow-lg hover:scale-105 transition">KIRISH</button>
             </div>
         </div>
     </div>
 
-    <main id="app-screen" class="hidden min-h-screen pb-20">
-        <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
-            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/5 border border-white/10">
-                <i class="fas fa-moon"></i>
+    <main id="app-screen" class="hidden max-w-3xl mx-auto pt-8 px-6">
+        <header class="flex justify-between items-center mb-10">
+            <button onclick="toggleTheme()" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition bg-white/5 border border-white/10">
+                <i id="theme-icon" class="fas fa-moon"></i>
             </button>
             <div class="flex gap-2 bg-white/5 p-1 rounded-full border border-white/10">
-                <button class="lang-btn active" data-lang="uz">UZ</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-                <button class="lang-btn" data-lang="ru">RU</button>
+                <button onclick="changeLang('uz')" class="lang-btn active" id="btn-uz">UZ</button>
+                <button onclick="changeLang('en')" class="lang-btn" id="btn-en">EN</button>
+                <button onclick="changeLang('ru')" class="lang-btn" id="btn-ru">RU</button>
             </div>
         </header>
 
-        <div class="max-w-3xl mx-auto mt-10 px-6">
-            <div class="text-center mb-10">
-                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
-                <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[var(--primary)]"></p>
-            </div>
+        <div class="text-center mb-10">
+            <h2 id="main-title" class="text-4xl font-bold mb-2">Milliy sertifikat bo'limi</h2>
+            <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase"></p>
+        </div>
 
-            <div class="cyber-container p-8 relative mb-10">
-                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none">
-                <div class="h-px bg-white/10 w-full mb-6"></div>
-                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light"></textarea>
-                
-                <div class="flex flex-wrap gap-4 justify-between items-center mt-6 border-t border-white/5 pt-6">
-                    <span class="text-[var(--primary)] font-black italic tracking-wider">
-                        <span id="word-count">0</span> <span id="word-label">SO'Z</span>
-                    </span>
-                    <div class="flex gap-3">
-                        <button id="btn-download" class="hidden bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl text-sm border border-white/10 transition-all">
-                            <i class="fas fa-file-pdf mr-2"></i> PDF
-                        </button>
-                        <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
-                    </div>
+        <div class="cyber-container p-8 mb-10">
+            <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4">
+            <div class="h-px bg-white/10 w-full mb-6"></div>
+            <textarea id="essay-text" oninput="countWords()" placeholder="Matnni yozing..." class="w-full h-64 bg-transparent resize-none text-lg leading-relaxed font-light"></textarea>
+            <div class="flex justify-between items-center mt-6">
+                <span class="text-[var(--primary)] font-black italic tracking-wider"><span id="word-count">0</span> SO'Z</span>
+                <div class="flex gap-2">
+                    <button id="btn-download" onclick="downloadPDF()" class="hidden bg-white/10 text-white px-6 py-3 rounded-xl text-sm border border-white/10">PDF</button>
+                    <button onclick="analyzeEssay()" class="btn-primary px-8 py-3 rounded-xl text-sm shadow-md">TAHLIL QILISH</button>
                 </div>
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list"></div>
-
-            <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5 pb-10">
-                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-4 text-white">Xatolar tahlili va tavsiyalar</h3>
-                <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed italic border-dashed border-white/20"></div>
-            </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list"></div>
+        <div id="feedback-section" class="hidden mb-20">
+            <h3 class="text-[10px] font-black tracking-[4px] opacity-40 uppercase mb-4">AI TAHLILI</h3>
+            <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed italic border-dashed border-white/20"></div>
         </div>
     </main>
 
-    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
-        <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
+    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center">
+        <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p class="text-[var(--primary)] font-bold tracking-widest uppercase">Tahlil qilinmoqda...</p>
     </div>
 
-    <script src="app.js"></script>
-</body>
-</html><!DOCTYPE html>
-<html lang="uz">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EssayLab AI - Final Edition</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;500;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body class="theme-uz">
+    <script>
+        const API_KEY = "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"; 
+        let currentLang = 'uz';
 
-    <div id="auth-screen" class="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-[#010810]">
-        <div class="cyber-container w-full max-w-md p-10 text-center relative overflow-hidden">
-            <h1 class="text-5xl font-black italic mb-10 cyber-title">EssayLab AI</h1>
-            <div class="space-y-5 relative z-10">
-                <input id="input-name" type="text" placeholder="Ism va Familiya" class="cyber-input w-full p-4 text-center">
-                <input id="input-alias" type="text" placeholder="Taxallus" class="cyber-input w-full p-4 text-center">
-                <button id="btn-login" class="btn-primary w-full py-5 rounded-2xl mt-6 text-xl">KIRISH</button>
-            </div>
-        </div>
-    </div>
+        const systems = {
+            uz: { title: "Milliy sertifikat bo'limi", max: 7.5, criteria: ["MAVZUNI YORITISH", "MANTIQIY BOG'LIQLIK", "LUG'AT BOYLIĞI", "GRAMMATIKA"], prompt: "CEFR standard. Max 7.5." },
+            en: { title: "IELTS Writing Center", max: 9.0, criteria: ["TASK RESPONSE", "COHERENCE", "LEXICAL RESOURCE", "GRAMMAR ACCURACY"], prompt: "IELTS standard. Max 9.0." },
+            ru: { title: "Сертификация (ТРКИ)", max: 25, criteria: ["СОДЕРЖАНИЕ", "СВЯЗНОСТЬ", "ЛЕКСИКА", "ГРАММАТИКА"], prompt: "ТРКИ standard. Max 25." }
+        };
 
-    <main id="app-screen" class="hidden min-h-screen pb-20">
-        <header class="max-w-3xl mx-auto pt-8 px-6 flex justify-between items-center">
-            <button id="btn-theme" class="w-12 h-12 rounded-full flex items-center justify-center text-xl text-yellow-400 glass transition hover:rotate-180 bg-white/5 border border-white/10">
-                <i class="fas fa-moon"></i>
-            </button>
-            <div class="flex gap-2 bg-white/5 p-1 rounded-full border border-white/10">
-                <button class="lang-btn active" data-lang="uz">UZ</button>
-                <button class="lang-btn" data-lang="en">EN</button>
-                <button class="lang-btn" data-lang="ru">RU</button>
-            </div>
-        </header>
+        function login() {
+            const name = document.getElementById('input-name').value;
+            const alias = document.getElementById('input-alias').value;
+            if(!name || !alias) return alert("Ma'lumotlarni to'ldiring!");
+            document.getElementById('auth-screen').classList.add('hidden');
+            document.getElementById('app-screen').classList.remove('hidden');
+            document.getElementById('user-badge').innerText = `@${alias.toUpperCase()} | ONLINE`;
+            renderCriteria([null, null, null, null]);
+        }
 
-        <div class="max-w-3xl mx-auto mt-10 px-6">
-            <div class="text-center mb-10">
-                <h2 id="main-title" class="text-4xl font-bold tracking-tight mb-2 text-white">Milliy sertifikat bo'limi</h2>
-                <p id="user-badge" class="text-xs font-bold tracking-[4px] opacity-50 uppercase text-[var(--primary)]"></p>
-            </div>
+        function changeLang(lang) {
+            currentLang = lang;
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`btn-${lang}`).classList.add('active');
+            document.body.className = document.body.classList.contains('light-mode') ? `theme-${lang} light-mode` : `theme-${lang}`;
+            document.getElementById('main-title').innerText = systems[lang].title;
+            renderCriteria([null, null, null, null]);
+        }
 
-            <div class="cyber-container p-8 relative mb-10">
-                <input id="essay-topic" type="text" placeholder="Esse mavzusi..." class="w-full bg-transparent border-none text-xl font-bold mb-4 focus:outline-none">
-                <div class="h-px bg-white/10 w-full mb-6"></div>
-                <textarea id="essay-text" placeholder="Matnni shu yerga yozing..." class="w-full h-80 bg-transparent resize-none focus:outline-none text-lg leading-relaxed font-light"></textarea>
-                
-                <div class="flex flex-wrap gap-4 justify-between items-center mt-6 border-t border-white/5 pt-6">
-                    <span class="text-[var(--primary)] font-black italic tracking-wider">
-                        <span id="word-count">0</span> <span id="word-label">SO'Z</span>
-                    </span>
-                    <div class="flex gap-3">
-                        <button id="btn-download" class="hidden bg-white/10 hover:bg-white/20 text-white px-6 py-3 rounded-xl text-sm border border-white/10 transition-all">
-                            <i class="fas fa-file-pdf mr-2"></i> PDF
-                        </button>
-                        <button id="btn-analyze" class="btn-primary px-10 py-3 rounded-xl text-sm shadow-lg">TAHLIL QILISH</button>
-                    </div>
-                </div>
-            </div>
+        function renderCriteria(scores) {
+            const config = systems[currentLang];
+            const list = document.getElementById('criteria-list');
+            list.innerHTML = "";
+            config.criteria.forEach((name, i) => {
+                const val = scores[i] !== null ? scores[i] : config.max;
+                list.innerHTML += `<div class="criteria-card ${scores[i] === null ? 'opacity-50' : ''}">
+                    <div class="flex flex-col"><span class="text-[9px] text-[var(--primary)] font-bold">NATIJA</span><span class="text-sm font-bold">${name}</span></div>
+                    <span class="score text-2xl">${val}<span class="text-xs opacity-30">/${config.max}</span></span>
+                </div>`;
+            });
+        }
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10" id="criteria-list"></div>
+        async function analyzeEssay() {
+            const text = document.getElementById('essay-text').value;
+            if(text.trim().length < 20) return alert("Matn juda qisqa!");
+            document.getElementById('loader').classList.remove('hidden');
+            document.getElementById('loader').style.display = 'flex';
 
-            <div id="feedback-section" class="hidden animate-in fade-in slide-in-from-bottom-5 pb-10">
-                <h3 class="text-[10px] font-black tracking-[4px] opacity-30 uppercase mb-4 text-white">Xatolar tahlili va tavsiyalar</h3>
-                <div id="feedback-content" class="cyber-container p-6 text-sm leading-relaxed italic border-dashed border-white/20"></div>
-            </div>
-        </div>
-    </main>
+            try {
+                const res = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: "POST",
+                    headers: { "Authorization": `Bearer ${API_KEY}`, "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: [{ role: "system", content: `${systems[currentLang].prompt} Return only format: Scores: [4 numbers], Feedback: [short text in ${currentLang}]` }, { role: "user", content: text }]
+                    })
+                });
+                const data = await res.json();
+                const content = data.choices[0].message.content;
+                const scores = content.match(/Scores:\s*([\d.,\s]+)/i)[1].match(/[\d.]+/g);
+                const feedback = content.split(/Feedback:/i)[1].trim();
+                renderCriteria(scores);
+                document.getElementById('feedback-content').innerText = feedback;
+                document.getElementById('feedback-section').classList.remove('hidden');
+                document.getElementById('btn-download').classList.remove('hidden');
+            } catch (e) { alert("Xatolik yuz berdi."); }
+            finally { 
+                document.getElementById('loader').classList.add('hidden');
+                document.getElementById('loader').style.display = 'none';
+            }
+        }
 
-    <div id="loader" class="fixed inset-0 z-[1000] bg-black/90 hidden flex-col items-center justify-center backdrop-blur-md">
-        <div class="w-16 h-16 border-4 border-[var(--primary)] border-t-transparent rounded-full animate-spin mb-6"></div>
-        <p class="text-[var(--primary)] font-bold tracking-[5px] animate-pulse">AI TAHLIL QILMOQDA...</p>
-    </div>
+        function toggleTheme() {
+            document.body.classList.toggle('light-mode');
+            const icon = document.getElementById('theme-icon');
+            icon.className = document.body.classList.contains('light-mode') ? 'fas fa-sun' : 'fas fa-moon';
+        }
 
-    <script src="app.js"></script>
+        function countWords() {
+            const words = document.getElementById('essay-text').value.trim().split(/\s+/).filter(x => x).length;
+            document.getElementById('word-count').innerText = words;
+        }
+
+        function downloadPDF() {
+            const name = document.getElementById('input-name').value;
+            const element = document.createElement('div');
+            element.style.padding = '20px';
+            element.innerHTML = `<h1>EssayLab Result</h1><p>Student: ${name}</p><hr>${document.getElementById('criteria-list').innerHTML}<hr><h3>Feedback:</h3>${document.getElementById('feedback-content').innerText}`;
+            html2pdf().from(element).save(`${name}_result.pdf`);
+        }
+    </script>
 </body>
 </html>
